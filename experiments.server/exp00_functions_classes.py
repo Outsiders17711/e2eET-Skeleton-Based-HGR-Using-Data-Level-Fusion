@@ -20,7 +20,6 @@ from fastai.vision.all import *
 from fastai.torch_core import defaults
 from torch.utils.tensorboard.writer import SummaryWriter
 from IPython.display import clear_output
-from sklearn.model_selection import train_test_split
 # ---
 from __main__ import args, deets
 from exp00_helper_functions import *
@@ -44,22 +43,13 @@ __all__ = [
     "e_stt_datetime",
     "e_strftime",
 
-    "ensembleTunerDataloader",
-    "ensembleTunerTraining",
-    "ensembleTunerEvaluation",
     "tunerImages",
-
     "end2endTunerModel",
     "e2eTunerLossWrapper",
     "attachMetrics",
     "returnMetrics",
     "e2eTunerLearnerEvaluation",
 
-    "tensorTunerDataloader",
-    "tensorTunerModel_CNN",
-    "tensorTunerModel_FCN",
-    "tensorTunerTraining",
-    "tensorTunerEvaluation",
 ]
 # -----------------------------------------------
 
@@ -86,16 +76,6 @@ opt_InitItrFinetune = {"2d": True, "3d": False}
 opt_ItrScalingSizes = {"2d": [224, 224, 276, 328], "3d": [276, 328, 380]}
 itr_scl_sizes = opt_ItrScalingSizes[args.nd] if args.itr_scl_sizes == ["<OPT>"] else args.itr_scl_sizes
 
-vocab_DHG1428 = {
-    14: ["01_Grab", "02_Tap", "03_Expand", "04_Pinch", "05_RotationCW", 
-        "06_RotationCCW", "07_SwipeRight", "08_SwipeLeft", "09_SwipeUp",
-        "10_SwipeDown", "11_SwipeX", "12_Swipe+", "13_SwipeV", "14_Shake"],
-    28: ["01_Grab", "02_Tap", "03_Expand", "04_Pinch", "05_RotationCW", "06_RotationCCW", 
-        "07_SwipeRight", "08_SwipeLeft", "09_SwipeUp", "10_SwipeDown", "11_SwipeX", 
-        "12_Swipe+", "13_SwipeV", "14_Shake", "15_Grab", "16_Tap", "17_Expand", 
-        "18_Pinch", "19_RotationCW", "20_RotationCCW", "21_SwipeRight", "22_SwipeLeft", 
-        "23_SwipeUp", "24_SwipeDown", "25_SwipeX", "26_Swipe+", "27_SwipeV", "28_Shake"]
-}
 # -----------------------------------------------
 
 
@@ -152,14 +132,11 @@ class e2eTunerImageTuples(fastuple):
     @classmethod
     def create(cls, fns): 
         imgs = tuple(PILImage.create(f) for f in fns)
-        # [ENCODE] convert label string to a list(int) of ASCII values to bypass fastai checks
         label = tuple([ord(c) for c in format(fns[0].parent.parent.name, "32")])
         return cls(tuple((imgs, label)))
 
     def show(self, ctx=None, **kwargs):
-        # [DECODE] unzip tuple and translate list(int) of ASCII values to label string (not used)
-        imgs, label = list(self[0]), "".join(map(chr, self[1])).replace(" ", "")
-        # print(f"{label= }")
+        imgs = list(self[0])
         
         for i in imgs:
             if (not isinstance(i, Tensor)) or (i.shape != imgs[0].shape):
@@ -401,22 +378,6 @@ def FitFlatCosine(learn, i_tag, i_eps, i_pct_start, e_epochs_lr_accuracy, finetu
     return (learn, oCCb.e_epochs, e_lr, oCCb.e_accuracy)
 # -----------------------------------------------
 
-def FitFineTune(learn, i_tag, i_eps, i_pct_start, e_epochs_lr_accuracy, log=False, verbose=False):
-    (e_epochs, e_lr, e_accuracy), i_lr = e_epochs_lr_accuracy, 0.002
-    i_frz_eps, i_ufrz_eps = i_eps
-    print(f">> @{i_tag} --- pct_start: {i_pct_start} --- learning_rate: {i_lr}")
-
-    monitor = "accuracyTuner" if hasattr(learn.model, "tuner_img_sz") else "accuracy"
-    oCCb = outsidersCustomCallback(i_tag, e_epochs, e_accuracy, monitor, verbose=verbose)
-    learn.fine_tune(freeze_epochs=i_frz_eps, epochs=i_ufrz_eps, base_lr=i_lr, pct_start=i_pct_start, cbs=[oCCb])
-
-    args.e_history.extend(learn.recorder.values)
-    if verbose: learn.show_results(nrows=1, ncols=4)
-    if log: i_Logger(i_tag, oCCb.i_accuracy)
-
-    return (learn, oCCb.e_epochs, e_lr, oCCb.e_accuracy)
-# -----------------------------------------------
-
 
 class multiOrientationModel(Module):
     def __init__(self, encoder, head, nf, debug=False):
@@ -463,252 +424,14 @@ class multiOrientationModel(Module):
 
     def splitter(self, model: Module):
         return [params(model.encoder), params(model.head)]
-# -----------------------------------------------
 
-
-def _split_Xy(b):
-    i = 1 if (len(b) == 1) else len(b) - 1
-    return b[:i], b[i:]
-
-def _get_predictions(learn, dls, valid_only):
-    preds, targs = [], []
-    dls_subsets = [1] if valid_only else [0, 1]
-    
-    try:    _model = learn.model
-    except: _model = learn
-    
-    for idx in dls_subsets:
-        for b in dls[idx]: 
-            xb, yb = _split_Xy(b)
-            with torch.no_grad(): 
-                _preds, _targs = _model(*xb), yb
-            preds.extend(_preds)
-            targs.extend(_targs)
-
-    return torch.vstack(preds), torch.cat(targs, dim=0)
-
-def saveEnsembleTunerPredsTargs(mVOs, ds_directory, pkl_pt_mask, _img_sz=380, _bs=16, verbose=False, e_seed_worker=None, e_repr_gen=None):
-    
-    for dls_subset in  ["train-valid", "valid", "test"]:
-        _valid_only = False if (dls_subset == "train-valid") else True
-        _ds_valid = dls_subset if (dls_subset == "test") else "valid"
-        _pt_file = f"{pkl_pt_mask}-[{dls_subset}].pt"
-
-        dls = multiOrientationDataLoader(
-            ds_directory, bs=_bs, img_size=_img_sz, shuffle=False, ds_valid=_ds_valid,
-            # _e_seed_worker=e_seed_worker, _e_repr_gen=e_repr_gen, 
-        )
-        learn = torch.load(f=f"{pkl_pt_mask}.pkl")
-
-        preds, targs = _get_predictions(learn, dls, valid_only=_valid_only)
-        decoded = torch.argmax(preds, dim=1)
-        accuracy = (sum(decoded == targs) / len(targs)).item()
-
-        preds = torch.unsqueeze(preds, dim=1)
-        X = preds.cpu().numpy()
-        y = targs.cpu().numpy()
-        torch.save(obj=[X, y], f=_pt_file)
-
-        if verbose:
-            print(f"\n>> Processed {translateMVOs(mVOs)} {dls.c}G {dls_subset=}!")
-            print(f">> --- {preds.shape= } | {decoded.shape} | {targs.shape} | {accuracy:.4f}\n")
-
-def modelCheckpoint(learn, learn_directory, ds_tuner=True):
+def modelCheckpoint(learn, learn_directory):
     _stem = f"[{deets.e_secret}]-{args.n_classes}G-{translateMVOs(args.mv_orientations)}"
     _path_mask = f"../checkpoints/{_stem}"
     
     learn = learn.load(file=deets.e_model_tag, with_opt=True)
     learn.export(fname=f"{_path_mask}.pkl")
-
-    if ds_tuner:
-        saveEnsembleTunerPredsTargs(
-            mVOs=args.mv_orientations, ds_directory=deets.ds_directory, 
-            pkl_pt_mask=f"{learn_directory}/{_path_mask}", 
-            # e_seed_worker=e_seed_worker, e_repr_gen=e_repr_gen, 
-            _img_sz=380, verbose=False
-        )
-
     print(f"Learner pkl and pt checkpoints created successfully")
-# -----------------------------------------------
-
-
-class tunerImages(fastuple):
-    @classmethod
-    def create(cls, Xy): 
-        assert len(Xy) == 2, ">> InputError: expected list/tuple if X and y data!!"
-        X, y = Xy
-        img_size = 560
-        l_band = img_size // X.shape[-1]
-
-        imgs = [np.zeros([img_size, img_size, 3], dtype=np.uint8) for vo in X]
-        stt_bands = [(np.argmax(vo)*l_band) for vo in X]
-
-        for _idx, (_img, _stt_band) in enumerate(zip(imgs, stt_bands)):
-            correct = _stt_band ==  y*l_band
-            _img[_stt_band:_stt_band+l_band, :] = [0, 255, 0] if correct else [255, 0, 0]
-            imgs[_idx] = _img
-
-        return PILImage.create(np.hstack(imgs))
-    
-    def show(self, ctx=None, **kwargs): 
-        img = self[0]
-        if not isinstance(img, Tensor): img = tensor(img)
-        return show_image(img, ctx=ctx, figsize=(10, 10), **kwargs)
-
-def tunerImageBlock():
-    return TransformBlock(type_tfms=tunerImages.create, batch_tfms=IntToFloatTensor)
-
-def get_tunerPredsTargs(ds_subset):
-    global deets
-    ds = loadEnsembleTunerDataset(mVOs=args.mv_orientations, verbose=(ds_subset=="test"))
-
-    if ds_subset == "train-valid":
-        valid_pct = 0.25
-        X_trn_val, y_trn_val = ds["train-valid"]
-        rand_idxs = torch.randperm(len(y_trn_val)).numpy()
-        X_trn_val, y_trn_val = X_trn_val[rand_idxs], y_trn_val[rand_idxs]
-
-        l_ds_Valid = int(valid_pct * len(y_trn_val))
-        l_ds_Train = len(y_trn_val) - l_ds_Valid
-        print(f"{X_trn_val.shape=} | {y_trn_val.shape=}")
-    
-    elif ds_subset == "test":
-        X_trn_val, y_trn_val = ds["test"]
-
-        l_ds_Train = l_ds_Valid = len(y_trn_val)
-        print(f"{X_trn_val.shape=} | {y_trn_val.shape=}")
-
-        X_trn_val = np.concatenate((X_trn_val, X_trn_val), axis=0)
-        y_trn_val = np.concatenate((y_trn_val, y_trn_val), axis=0)
-
-    else:  # if ds_subset == "train-valid-test":
-        X_trn_val, y_trn_val = ds["train-valid"]
-        X_tst, y_tst = ds["test"]
-
-        l_ds_Train, l_ds_Valid = len(y_trn_val), len(y_tst)
-        print(f"{X_trn_val.shape=} | {y_trn_val.shape=} || {X_tst.shape=} | {y_tst.shape=}")
-
-        X_trn_val = np.concatenate((X_trn_val, X_tst), axis=0)  # size=(L, l_mVos, nC)
-        y_trn_val = np.concatenate((y_trn_val, y_tst), axis=0)  # size=(L,)
-
-    X_trn_val = np.moveaxis(X_trn_val, 1, -1)  # size=(L, nC, l_mVos)
-    y_trn_val = np.expand_dims(y_trn_val, axis=1)  # size=(L, 1, l_mVos)
-    ds_TrnVal = np.hstack((X_trn_val, y_trn_val))
-
-    print(f"{ds_TrnVal.shape=}")  # size=(L, nC+1, l_mVos)
-    deets = deets._replace(l_ds_Train=l_ds_Train, l_ds_Valid=l_ds_Valid)
-    return ds_TrnVal
-
-def get_tunerXy(Xy, debug=False):
-    if debug: print(f"@get_tunerXy: {Xy= }")
-    _X = np.moveaxis(Xy[:-1], -1, 0)  # size=(l_mVos, nC)
-    _y = int(Xy[-1][0])
-    return [_X, _y]
-
-def get_tunerLabel(Xy, debug=False):
-    if debug: print(f"@get_tunerLabel: {Xy= }")
-    _y = int(Xy[-1][0])
-    return vocab_DHG1428[args.n_classes][_y]
-
-def get_splits(ds_TrnVal, debug=False):
-    if debug: print(f"@get_splits{ds_TrnVal[:3]= }")
-    rand_idxs_TrnVal = L(list(torch.randperm(deets.l_ds_Train).numpy()))
-    idxs_Tst = L(range(deets.l_ds_Train, deets.l_ds_Train+deets.l_ds_Valid))
-    return rand_idxs_TrnVal, idxs_Tst        
- 
-def ensembleTunerDataloader(ds_subset, img_size=380, bs=16, return_dls=True, preview=False):
-    assert ds_subset in ["train-valid-test", "train-valid", "test"]
-    
-    tunerDHG1428 = DataBlock(
-        blocks=(tunerImageBlock, CategoryBlock),
-        get_items=get_tunerPredsTargs,
-        get_x=get_tunerXy,
-        get_y=get_tunerLabel,
-        splitter=get_splits,
-        item_tfms=Resize(img_size, method=ResizeMethod.Squish),
-        batch_tfms=[Normalize.from_stats(*imagenet_stats)],
-    )
-
-    ds = tunerDHG1428.datasets(ds_subset, verbose=False)
-    if return_dls:
-        dls = tunerDHG1428.dataloaders(ds_subset, bs=bs, worker_init_fn=e_seed_worker, generator=e_repr_gen, device=defaults.device)
-        clear_output(wait=False)
-        assert dls.c == args.n_classes, ">> ValueError: dls.c != n_classes as specified!!"
-
-        if preview:
-            print(dedent(f"""
-            Dataloader has been created successfully...
-            The dataloader has {len(dls.vocab)} ({dls.c}) classes: {dls.vocab}
-            Training set [len={len(dls.train.items)}] loaded on device: {dls.train.device}
-            Validation set [len={len(dls.valid.items)}] loaded on device: {dls.valid.device}
-            Previewing loaded data [1] and applied transforms [2]...
-            """))
-            dls.show_batch(nrows=1, ncols=4, unique=False, figsize=(12, 12))
-            dls.show_batch(nrows=1, ncols=4, unique=True, figsize=(12, 12))
-        else: clear_output(wait=False)
-
-        return dls
-
-    else: return ds
-# -----------------------------------------------
-
-
-def _compare(this, that):
-    return round(sum(this == that) / len(that), ndigits=4)
-
-def _ensemble_similarity(dX):
-    l_ensemble = L(dX.shape)[1]
-    _dX_0 = np.column_stack(L(dX[:, 0])*l_ensemble)
-    return round(sum(np.all(dX == _dX_0, axis=1)) / len(dX), ndigits=4)
-
-def _pt_finder(suffix):
-    for f in Path(deets.ds_directory).iterdir():
-        if f.is_file() and f.stem.endswith(suffix):
-            return f
-
-    raise FileNotFoundError(f".pt file with {suffix=} not found!")
-
-def loadEnsembleTunerDataset(mVOs, checkpoint=False, verbose=False):
-    ds = {}
-    ds_subsets = ["train-valid", "valid", "test"]
-
-    for _subset in ds_subsets:
-        X, dX, y = [], [], []
-
-        for _vo in mVOs:
-            _pt_file = _pt_finder(suffix=f"{args.n_classes}G-{translateMVOs(_vo)}-[{_subset}]")
-            _X, _y = torch.load(f=_pt_file)
-            X.append(_X) ; y.append(_y) 
-
-            _dX = np.argmax(_X, axis=2)
-            if L(_dX.shape)[1] == 1:
-                _similarity = _accuracy = _compare(_dX[:, 0], _y)
-                dX.append(np.squeeze(_dX))
-            else:  # if L(_dX.shape)[1] == 2:
-                _similarity = _compare(_dX[:, 0], _dX[:, 1])
-                _accuracy = [_compare(_dX[:, 0], _y), _compare(_dX[:, 1], _y)]
-                dX.append(_dX[:, 0]) ; dX.append(_dX[:, 1])
-
-            if verbose:
-                print(f"{translateMVOs(_vo):>10}-[{_subset}]: {_X.shape=} | {_accuracy=:.4f}")
-        
-        # source: https://stackoverflow.com/a/37777691
-        _identical_targs = (np.diff(np.vstack(y).reshape(len(y), -1), axis=0) == 0).all()
-        assert _identical_targs, "`y` contains different `targs` arrays"
-
-        X = np.concatenate(X, axis=1)
-        y = np.column_stack(y)
-        dX = np.column_stack(dX)
-        ds[_subset] = (X, y)
-
-        if verbose:
-            print(f">> {X.shape=} | {y.shape=} | {dX.shape=}")
-            print(f">> {_identical_targs=} | {_ensemble_similarity(dX)=:.4f}\n")
-
-    if checkpoint:
-        torch.save(obj=ds, f=f"{deets.ds_directory}/eTDs-{args.n_classes}G-{translateMVOs(mVOs)}.pt")
-    
-    return ds
 # -----------------------------------------------
 
 
@@ -747,9 +470,6 @@ def initTraining(query_tuple, nd, bs, img_sz, eps=None, pct_start=None, log=Fals
             e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy),
             finetune=True, log=log,
         )
-        # return_tuple = FitFineTune(
-        #     learn, i_tag=f"i{img_sz}f", i_eps=(max(1, int(0.15*_eps_b)), max(1, int(0.35*_eps_b))), 
-        #     i_pct_start=_ps_b, e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy), log=log, )
         learn, e_epochs, e_lr, e_accuracy = return_tuple
 
     i_Timer(stt_time=deets.e_stt_datetime)
@@ -794,85 +514,31 @@ def iterativeScaling(query_tuple, nd, bs, img_sz, eps, pct_start=None, finetune=
     
     i_Timer(stt_time=deets.e_stt_datetime)
     return (learn, e_epochs, e_lr, e_accuracy)
-
-def ensembleTunerTraining(query_tuple, bs, img_sz, itr_eps, pct_start=0.5):
-    learn, e_epochs, e_lr, e_accuracy = query_tuple
-    if not(hasattr(args, "e_history")): setattr(args, "e_history", [])
-
-    l_itr_eps = len(itr_eps)
-    assert l_itr_eps%2 == 0, "ValueError: `itr_eps` must be a flat list of successive freeze/unfreeze training rounds"
-    itr_eps = [itr_eps[i:i+2] for i in range(0, l_itr_eps, 2)]
-
-    for (_eps_a, _eps_b) in itr_eps:
-        print(f"Batch Size: {bs}, Image Size: {img_sz}, Epochs: [{_eps_a}, {_eps_b}]")
-
-        learn.freeze() ; _tag = f"t{img_sz}{isFrozen(learn)} x{_eps_a:02}"
-        return_tuple = FitFlatCosine(
-            learn, 
-            i_tag=_tag, i_eps=_eps_a, i_pct_start=pct_start, 
-            e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy),
-        )
-        learn, e_epochs, e_lr, e_accuracy = return_tuple
-        args.e_history.extend(learn.recorder.values)
-        i_Logger(_tag, evaluateLearner(learn=learn, dls=learn.dls))  # i_Logger(_tag, e_accuracy)
-
-        learn.unfreeze() ; _tag = f"t{img_sz}{isFrozen(learn)} x{_eps_b:02}"
-        return_tuple = FitFlatCosine(
-            learn, 
-            i_tag=_tag, i_eps=_eps_b, i_pct_start=pct_start, 
-            e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy),
-        )
-        learn, e_epochs, e_lr, e_accuracy = return_tuple
-        args.e_history.extend(learn.recorder.values)
-        i_Logger(_tag, evaluateLearner(learn=learn, dls=learn.dls))  # i_Logger(_tag, e_accuracy)
-
-    i_Timer(stt_time=deets.e_stt_datetime)
-    return (learn, e_epochs, e_lr, e_accuracy)
 # -----------------------------------------------
 
 
-def evaluateLearner(learn, dls, verbose=False):
-    interp = ClassificationInterpretation.from_learner(learn=learn, dl=dls.valid)
-    arg_preds = np.argmax(interp.preds, axis=1)
-    accuracy = np.round(sum(interp.targs == arg_preds) / len(interp.targs), decimals=4)
+class tunerImages(fastuple):
+    @classmethod
+    def create(cls, Xy): 
+        assert len(Xy) == 2, ">> InputError: expected list/tuple if X and y data!!"
+        X, y = Xy
+        img_size = 560
+        l_band = img_size // X.shape[-1]
+
+        imgs = [np.zeros([img_size, img_size, 3], dtype=np.uint8) for vo in X]
+        stt_bands = [(np.argmax(vo)*l_band) for vo in X]
+
+        for _idx, (_img, _stt_band) in enumerate(zip(imgs, stt_bands)):
+            correct = _stt_band ==  y*l_band
+            _img[_stt_band:_stt_band+l_band, :] = [0, 255, 0] if correct else [255, 0, 0]
+            imgs[_idx] = _img
+
+        return PILImage.create(np.hstack(imgs))
     
-    clear_output(wait=False)
-    if verbose: print(f"@evaluateLearner: learn.model {accuracy=:.4f}")
-    return accuracy
-
-def ensembleTunerEvaluation(learn, dls, mVOs):
-    train_accuracy = evaluateLearner(learn=learn, dls=dls)
-    test_dls = ensembleTunerDataloader(ds_subset="test")
-    test_accuracy = evaluateLearner(learn=learn, dls=test_dls)
-
-    _X = test_dls.valid_ds.items[:, :-1, :]
-    _y = test_dls.valid_ds.items[:, -1, 0]
-    _dX = np.moveaxis(np.argmax(_X, axis=1), -1, 0)
-
-    vo_accuracies = []
-    for idx, vo_preds in enumerate(_dX):
-        _accuracy = round(sum(vo_preds == _y) / len(_y), ndigits=4)
-        vo_accuracies.append(f"{_accuracy:.4f}")
-        print(f"{translateMVOs(mVOs[idx]):>10} {_accuracy:.4f}")
-
-    Logger(f"trainAccuracy: {train_accuracy:.4f}~[{'-'.join(vo_accuracies)}]")
-    Logger(f"testAccuracy: {test_accuracy:.4f} @{i_Timer(stt_time=e_stt_datetime, stdout=False)}")
-
-def e2eTunerLearnerEvaluation(learn, mVOs, dls=None, ds_idx=1, verbose=False):
-    if dls is None: dl = learn.dls[ds_idx].new(shuffled=False, drop_last=False)
-    else:           dl = dls[ds_idx]
-    
-    preds, targs, decoded = learn.get_preds(dl=dl, with_decoded=True)
-    tags = [_vo.title() for _vo in mVOs]
-
-    accuracy = [round((sum(i_d == targs) / len(targs)).item(), ndigits=4) for i_d in decoded]
-    accuracy = dict(zip([*tags, "Tuner"], accuracy))
-
-    clear_output(wait=False)
-    if verbose: Logger(f"accuracies@e2eT: {accuracy}")
-    else: return accuracy["Tuner"]
-# -----------------------------------------------
-
+    def show(self, ctx=None, **kwargs): 
+        img = self[0]
+        if not isinstance(img, Tensor): img = tensor(img)
+        return show_image(img, ctx=ctx, figsize=(10, 10), **kwargs)
 
 class end2endTunerModel(Module):
     def __init__(self, archMultiVOs, archTuner, dls_vocab, tuner_img_sz=224, debug=False):
@@ -936,8 +602,8 @@ class end2endTunerModel(Module):
         for _idx, (_X, _y) in enumerate(zip(preds, targs)):
             img = tunerImages.create(Xy=[_X, _y])
             img = compose_tfms(img, self.item_tfms)
-
             if self.debug and (_idx == 0): print(f">> {img.shape= }") ; img.show()  # type:ignore
+
             batch.append(torch.unsqueeze(img, dim=0))
 
         batch = torch.cat(batch, dim=0).to(defaults.device)
@@ -953,6 +619,20 @@ class end2endTunerModel(Module):
         bodies = params(model.multiVOsBody) + params(model.tunerBody)
         heads  = params(model.multiVOsHead) + params(model.tunerHead)
         return [bodies, heads]
+
+def e2eTunerLearnerEvaluation(learn, mVOs, dls=None, ds_idx=1, verbose=False):
+    if dls is None: dl = learn.dls[ds_idx].new(shuffled=False, drop_last=False)
+    else:           dl = dls[ds_idx]
+    
+    preds, targs, decoded = learn.get_preds(dl=dl, with_decoded=True)
+    tags = [_vo.title() for _vo in mVOs]
+
+    accuracy = [round((sum(i_d == targs) / len(targs)).item(), ndigits=4) for i_d in decoded]
+    accuracy = dict(zip([*tags, "Tuner"], accuracy))
+
+    clear_output(wait=False)
+    if verbose: Logger(f"accuracies@e2eT: {accuracy}")
+    else: return accuracy["Tuner"]
 # -----------------------------------------------
 
 
@@ -1053,186 +733,8 @@ def generateModelGraph(model, dls, tag="e2eEnsembleTuner"):
         {deets.e_strftime= }
     """
     writer.add_text(tag="model information", text_string=m_info)
-
     writer.add_graph(model, input_to_model=dls.one_batch()[0], verbose=False)
-    # try:   writer.add_graph(model, input_to_model=dls.one_batch()[0], verbose=False)
-    # except Exception as e: 
-    #     if "CUDA" in str(e): 
-    #         stats = os.popen("gpustat -p").readlines(); 
-    #         print("".join(stats[0] + stats[args.idx_gpu+1]))
-
     writer.close()
     print(f">> Model graph generated successfully @{m_tag= }")
     os._exit(os.EX_OK)
-# -----------------------------------------------
-
-
-# -----------------------------------------------
-# -----------------------------------------------
-class tensorTunerDataset(torch.utils.data.Dataset):
-    def __init__(self, ds_subset, no_splits=False, is_valid=False, do_softmax=False, verbose=False):
-        assert ds_subset in ["train-valid", "test"]
-        self.set_X_y(ds_subset, no_splits, is_valid, do_softmax, verbose)
-
-    def __getitem__(self, idx): return self.X[idx], self.y[idx]
-        
-    def __len__(self): return len(self.X)
-
-    def set_X_y(self, ds_subset, no_splits, is_valid, do_softmax, verbose):
-        self.ds = loadEnsembleTunerDataset(mVOs=args.mv_orientations, verbose=verbose)
-        self.vocab = vocab_DHG1428[args.n_classes]
-
-        if ds_subset == "test":
-            self.X, self.y = self.ds["test"]
-
-        elif ds_subset == "train-valid":
-            if no_splits:
-                self.X, self.y = self.ds["train-valid"]
-
-            elif not (no_splits):
-                X, y = self.ds["train-valid"]
-                X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.25, random_state=deets.e_repr_seed,)
-
-                if is_valid:         self.X, self.y = X_valid, y_valid
-                elif not (is_valid): self.X, self.y = X_train, y_train
-
-        assert all(self.y[:, 0] == self.y[:, 1])
-        self.y = torch.tensor(self.y[:, 0]).long()
-        self.X = torch.tensor(self.X).float()
-
-        if do_softmax: self.X = NN.Softmax(dim=-1)(self.X)
-        if args.tuner_network_type == "CNN":
-            self.X = torch.cat([self.X]*args.n_classes, dim=-1).reshape((*self.X.shape, -1))
-
-def tensorTunerDataloader(verbose=False):
-    if args.tuner_train_subset == "train-valid":
-        train_ds = tensorTunerDataset(ds_subset="train-valid", is_valid=False)
-        valid_ds = tensorTunerDataset(ds_subset="train-valid", is_valid=True)
-        test_ds  = tensorTunerDataset(ds_subset="test", verbose=verbose)
-
-    else:  # elif args.tuner_train_subset == "train-valid-test":
-        train_ds = tensorTunerDataset(ds_subset="train-valid", no_splits=True)
-        valid_ds = test_ds = tensorTunerDataset(ds_subset="test", verbose=verbose)
-
-    dls = DataLoaders.from_dsets(train_ds, valid_ds, bs=args.bs).to(defaults.device)
-    test_dls = DataLoaders.from_dsets(test_ds, test_ds, bs=args.bs).to(defaults.device)
-
-    clear_output(wait=False)
-    if verbose:
-        print(dedent(f"""
-            {dls.train.X.shape=} | {dls.train.y.shape=}
-            {dls.valid.X.shape=} | {dls.valid.y.shape=}
-            {test_dls.train.X.shape=} | {test_dls.train.y.shape=}
-            {test_dls.valid.X.shape=} | {test_dls.valid.y.shape=}
-        """))
-
-    return dls, test_dls
-
-
-class tensorTunerModel_CNN(Module):
-    def __init__(self, architecture, n_in, n_out, verbose=False):
-        self.encoder = create_body(arch=architecture, n_in=n_in)
-        self.head = create_head(nf=num_features_model(m=self.encoder), n_out=n_out)
-        
-        apply_init(self.head, NN.init.kaiming_normal_)
-        self.to(defaults.device)
-        if verbose: print(f"{self= }")
-
-    def forward(self, X): return self.head(self.encoder(X))
-
-    def splitter(self, model:Module): return [params(model.encoder), params(model.head)]
-
-class tensorTunerModel_FCN(Module):
-    def __init__(self, n_in, n_out, layer_sizes=None, verbose=False):
-        self.verbose = verbose
-        layer_sizes = [512, 1024, 2048, 4096][::-1] if (layer_sizes is None) else layer_sizes
-        self.tuner = self._fastaiHead(n_in, n_out, ps=0.75, momentum=0.25, lin_ftrs=layer_sizes)
-
-        apply_init(self.tuner, NN.init.kaiming_normal_)
-        self.to(defaults.device)
-        if self.verbose: print(f"{self= }")
-
-    def forward(self, X):
-        return self.tuner(X)
-
-    def _fastaiHead(self, n_in, n_out, lin_ftrs, ps=0.5, momentum=0.01):
-        lin_ftrs = [n_in] + lin_ftrs
-        l_lin_ftrs = len(lin_ftrs)
-        ps = L(round(ps*i/l_lin_ftrs, ndigits=2) for i in range(1, l_lin_ftrs+1))
-        if self.verbose: print(f"{l_lin_ftrs= } \n{lin_ftrs= } \n{ps= }")
-
-        layers = [
-            NN.Flatten(),
-            NN.BatchNorm1d(num_features=n_in, momentum=momentum),
-            NN.Dropout(p=ps[0]),
-        ]
-        for _ni, _no, _ps, in zip(lin_ftrs[:-1], lin_ftrs[1:], ps[1:]):
-            layers += self._Lin_Bn_Drop(n_in=_ni, n_out=_no, ps=_ps, momentum=momentum)
-        layers.append(NN.Linear(in_features=lin_ftrs[-1], out_features=n_out))
-
-        return NN.Sequential(*layers)
-
-    def _Lin_Bn_Drop(self, n_in, n_out, ps, momentum):
-        return [
-            NN.Linear(in_features=n_in, out_features=n_out),
-            NN.ReLU(inplace=True),
-            NN.BatchNorm1d(num_features=n_out, momentum=momentum),
-            NN.Dropout(p=ps),
-        ]
-
-    def splitter(self, model:Module): return [params(model.tuner)]
-
-
-def tensorTunerTraining(query_tuple, itr_eps, pct_start=0.5):
-    learn, e_epochs, e_lr, e_accuracy = query_tuple
-    if not(hasattr(args, "e_history")): setattr(args, "e_history", [])
-
-    for _eps in itr_eps:
-        print(f"Epochs: [{_eps}, {_eps}]")
-
-        learn.freeze() ; _tag = f"tta.x{_eps:02}{isFrozen(learn)}"
-        return_tuple = FitFlatCosine(
-            learn, 
-            i_tag=_tag, i_eps=_eps, i_pct_start=pct_start, 
-            e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy),
-        )
-        learn, e_epochs, e_lr, e_accuracy = return_tuple
-        args.e_history.extend(learn.recorder.values)
-        i_Logger(_tag, evaluateLearner(learn=learn, dls=learn.dls))
-
-        learn.unfreeze() ; _tag = f"ttb.x{_eps:02}{isFrozen(learn)}"
-        return_tuple = FitFlatCosine(
-            learn, 
-            i_tag=_tag, i_eps=_eps, i_pct_start=pct_start, 
-            e_epochs_lr_accuracy=(e_epochs, e_lr, e_accuracy),
-        )
-        learn, e_epochs, e_lr, e_accuracy = return_tuple
-        args.e_history.extend(learn.recorder.values)
-        i_Logger(_tag, evaluateLearner(learn=learn, dls=learn.dls))
-
-    i_Timer(stt_time=deets.e_stt_datetime)
-    return (learn, e_epochs, e_lr, e_accuracy)
-
-def tensorTunerEvaluation(learn, dls, test_dls):
-    train_accuracy = evaluateLearner(learn=learn, dls=dls)
-    test_accuracy = evaluateLearner(learn=learn, dls=test_dls)
-
-    if args.tuner_network_type == "CNN":
-        _X = test_dls.valid_ds.X[:, :, 0, :].numpy()
-    else:  # elif args.tuner_network_type == "FCN":
-        _X = test_dls.valid_ds.X.numpy()
-    
-    _y = test_dls.valid_ds.y.numpy()
-    _dX = np.moveaxis(np.argmax(_X, axis=-1), -1, 0)
-    print(f"{len(_y)= }")
-
-    vo_accuracies = []
-    for idx, vo_preds in enumerate(_dX):
-        _accuracy = round(sum(vo_preds == _y) / len(_y), ndigits=4)
-        vo_accuracies.append(f"{_accuracy:.4f}")
-        print(f"{translateMVOs(args.mv_orientations[idx]):>10} {_accuracy:.4f}")
-
-    Logger(f"trainAccuracy: {train_accuracy:.4f}~[{'-'.join(vo_accuracies)}]")
-    Logger(f"testAccuracy: {test_accuracy:.4f} @{i_Timer(stt_time=e_stt_datetime, stdout=False)}")
-# -----------------------------------------------
 # -----------------------------------------------

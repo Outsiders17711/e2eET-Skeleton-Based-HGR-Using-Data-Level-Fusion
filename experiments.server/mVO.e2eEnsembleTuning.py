@@ -133,7 +133,7 @@ for _img_sz_ in itr_scl_sizes:
 learn.load(deets.e_model_tag, with_opt=True)  # ensure that best model is loaded
 e2eTunerLearnerEvaluation(learn=learn, mVOs=args.mv_orientations, verbose=True)
 
-if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory, ds_tuner=False)
+if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
 else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))
 
 
