@@ -1,0 +1,207 @@
+# --- [CNR @0.9878] -----------------------------
+0.9393 ->- [2593]-290722.1508 ->- CNR.3d-16G-[topdown]
+
+0.9567 ->- [2232]-290722.1817 ->- CNR.3d-16G-[topdown]-i20
+
+0.9705 ->- [65f4]-290722.1915 ->- CNR.3d-16G-[topdown]-i30
+# ------------------------------------------------------------------------
+
+
+# --- [FPHA @0.9322] ----------------------------
+0.7592 ->- [bc41]-280722.1314 ->- FPHA.3d-45G-[topdown]
+0.7394 ->- [0761]-280722.1354 ->- FPHA.3d-45G-[frontto]
+0.7309 ->- [9da5]-280722.1552 ->- FPHA.3d-45G-[sideleft]
+0.7309 ->- [8a92]-280722.1632 ->- FPHA.3d-45G-[custom]
+0.7224 ->- [a830]-280722.1514 ->- FPHA.3d-45G-[sideright]
+0.6997 ->- [2184]-280722.1433 ->- FPHA.3d-45G-[frontaway]
+
+0.8272 ->- [a0fd]-290722.1951 ->- FPHA.3d-45G-[sideleft|frontaway]
+0.8272 ->- [6157]-280722.2213 ->- FPHA.3d-45G-[topdown|custom]
+0.8244 ->- [121f]-290722.1123 ->- FPHA.3d-45G-[sideright|topdown]
+0.8215 ->- [dc6d]-280722.1841 ->- FPHA.3d-45G-[topdown|frontaway]
+0.8187 ->- [bbcd]-280722.2103 ->- FPHA.3d-45G-[topdown|sideleft]
+0.8159 ->- [deb0]-280722.2324 ->- FPHA.3d-45G-[frontto|topdown]
+0.8159 ->- [2d59]-290722.0412 ->- FPHA.3d-45G-[frontto|custom]
+0.8130 ->- [32eb]-290722.1012 ->- FPHA.3d-45G-[frontaway|custom]
+
+0.7422 ->- [985e]-010822.0638 ->- FPHA.3d-45G-[custom]-i20
+0.7252 ->- [8301]-010822.0638 ->- FPHA.3d-45G-[sideleft]-i20
+0.7224 ->- [9faf]-010822.0638 ->- FPHA.3d-45G-[topdown]-i20
+0.7195 ->- [0786]-010822.0638 ->- FPHA.3d-45G-[frontto]-i20
+
+0.8612 ->- [40b4]-010822.1302 ->- FPHA.3d-45G-[frontaway|custom]-i20
+0.8499 ->- [700c]-010822.0709 ->- FPHA.3d-45G-[topdown|custom]-i20
+0.8499 ->- [2dd4]-010822.0709 ->- FPHA.3d-45G-[topdown|frontaway]-i20
+0.8414 ->- [b28c]-010822.1302 ->- FPHA.3d-45G-[frontto|custom]-i20
+0.8385 ->- [c924]-010822.0708 ->- FPHA.3d-45G-[sideleft|frontaway]-i20
+0.8357 ->- [d9ec]-010822.1302 ->- FPHA.3d-45G-[topdown|sideleft]-i20
+0.8272 ->- [cea8]-010822.1302 ->- FPHA.3d-45G-[frontto|topdown]-i20
+0.7847 ->- [aa32]-010822.0709 ->- FPHA.3d-45G-[sideright|topdown]-i20
+
+0.9008 ->- [693e]-020822.0219 ->- FPHA.3d-45G-[frontaway|custom|topdown]-i20
+0.8980 ->- [e4a4]-020822.0216 ->- FPHA.3d-45G-[topdown|custom|frontaway]-i20
+0.8924 ->- [9ea9]-020822.0219 ->- FPHA.3d-45G-[frontto|custom|frontaway]-i20
+0.8924 ->- [69d0]-020822.0112 ->- FPHA.3d-45G-[topdown|custom|frontto]-i20
+0.8725 ->- [4a52]-020822.0112 ->- FPHA.3d-45G-[topdown|frontaway|frontto]-i20
+0.8669 ->- [d661]-020822.0219 ->- FPHA.3d-45G-[topdown|frontaway|custom]-i20
+0.8640 ->- [1494]-020822.0112 ->- FPHA.3d-45G-[frontto|custom|topdown]-i20
+0.8329 ->- [a234]-020822.0112 ->- FPHA.3d-45G-[frontaway|custom|frontto]-i20
+
+0.9348 ->- [fc08]-030822.0533 ->- FPHA.3d-45G-[frontaway|custom|topdown]-i20.10.10
+
+0.8313 ->- [aba2]-060822.0712 ->- FPHA.3d-45G-[frontaway|custom|topdown]-i20.paperSplit
+0.9043 ->- [0d66]-060822.0712 ->- FPHA.3d-45G-[frontaway|custom|topdown]-i20.10.10.paperSplit
+0.9183 ->- [797e]-060822.2016 ->- FPHA.3d-45G-[frontaway|custom|topdown]-i30.10.10.paperSplit
+# ------------------------------------------------------------------------
+
+
+# --- [LMDHG @0.9211] ---------------------------
+0.7978 ->- [0743]-280722.1314 ->- LMDHG.3d-13G-[topdown]
+0.7923 ->- [b43f]-280722.1406 ->- LMDHG.3d-13G-[frontaway]
+0.7814 ->- [d44b]-280722.1340 ->- LMDHG.3d-13G-[frontto]
+0.7377 ->- [4acc]-280722.1430 ->- LMDHG.3d-13G-[sideright]
+0.7268 ->- [8a18]-280722.1457 ->- LMDHG.3d-13G-[sideleft]
+0.7158 ->- [ecbe]-280722.1523 ->- LMDHG.3d-13G-[custom]
+
+0.8361 ->- [05d2]-280722.2158 ->- LMDHG.3d-13G-[frontto|sideleft]
+0.8306 ->- [b6bc]-290722.0403 ->- LMDHG.3d-13G-[sideright|frontto]
+0.8251 ->- [fb14]-290722.1055 ->- LMDHG.3d-13G-[custom|topdown]
+0.8251 ->- [7eaa]-290722.0837 ->- LMDHG.3d-13G-[sideleft|frontaway]
+0.8197 ->- [79d2]-290722.1141 ->- LMDHG.3d-13G-[custom|frontto]
+0.8197 ->- [7164]-290722.0751 ->- LMDHG.3d-13G-[sideleft|frontto]
+0.8142 ->- [117b]-290722.1227 ->- LMDHG.3d-13G-[custom|frontaway]
+0.8087 ->- [9b77]-280722.1942 ->- LMDHG.3d-13G-[frontto|topdown]
+
+0.8251 ->- [8e50]-010822.1350 ->- LMDHG.3d-13G-[frontaway]-i20
+0.8142 ->- [f9ee]-010822.1349 ->- LMDHG.3d-13G-[topdown]-i20
+0.8087 ->- [3ffa]-010822.1351 ->- LMDHG.3d-13G-[frontto]-i20
+0.8033 ->- [b545]-010822.1414 ->- LMDHG.3d-13G-[sideright]-i20
+
+0.9071 ->- [b6cd]-010822.1439 ->- LMDHG.3d-13G-[frontto|topdown]-i20
+0.8798 ->- [0262]-010822.1439 ->- LMDHG.3d-13G-[sideleft|frontto]-i20
+0.8743 ->- [df67]-010822.1409 ->- LMDHG.3d-13G-[custom|frontaway]-i20
+0.8743 ->- [16e3]-010822.1437 ->- LMDHG.3d-13G-[sideleft|frontaway]-i20
+0.8634 ->- [2338]-010822.1409 ->- LMDHG.3d-13G-[custom|frontto]-i20
+0.8579 ->- [e8ca]-010822.1408 ->- LMDHG.3d-13G-[custom|topdown]-i20
+0.8525 ->- [ebaf]-010822.1407 ->- LMDHG.3d-13G-[frontto|sideleft]-i20
+0.8470 ->- [dee4]-010822.1440 ->- LMDHG.3d-13G-[sideright|frontto]-i20
+
+0.9180 ->- [70b0]-020822.0443 ->- LMDHG.3d-13G-[custom|frontaway|topdown]-i20
+0.9126 ->- [5921]-020822.0402 ->- LMDHG.3d-13G-[sideleft|frontto|topdown]-i20
+0.9016 ->- [f4e6]-020822.0356 ->- LMDHG.3d-13G-[sideleft|frontaway|frontto]-i20
+0.9016 ->- [d5f5]-020822.0404 ->- LMDHG.3d-13G-[custom|frontaway|sideleft]-i20
+0.9016 ->- [c178]-020822.0404 ->- LMDHG.3d-13G-[frontto|topdown|frontaway]-i20
+0.9016 ->- [b140]-020822.0325 ->- LMDHG.3d-13G-[custom|frontaway|frontto]-i20
+0.9016 ->- [7ccd]-020822.0320 ->- LMDHG.3d-13G-[sideleft|frontaway|topdown]-i20
+0.8962 ->- [eb80]-020822.0443 ->- LMDHG.3d-13G-[frontto|topdown|custom]-i20
+0.8962 ->- [9601]-020822.0440 ->- LMDHG.3d-13G-[sideleft|frontto|custom]-i20
+0.8852 ->- [38f6]-020822.0433 ->- LMDHG.3d-13G-[sideleft|frontaway|custom]-i20
+0.8798 ->- [3434]-020822.0325 ->- LMDHG.3d-13G-[frontto|topdown|sideleft]-i20
+0.8689 ->- [ff55]-020822.0324 ->- LMDHG.3d-13G-[sideleft|frontto|frontaway]-i20
+
+0.9290 ->- [4f2f]-020822.1817 ->- LMDHG.3d-13G-[custom|frontaway|topdown]-i25.15
+
+0.9794 ->- [6415]-050822.2247 ->- LMDHG.3d-13G-[custom|frontaway|topdown]-i20.paperSplit
+0.9897 ->- [8405]-050822.2349 ->- LMDHG.3d-13G-[custom|frontaway|topdown]-i25.15.paperSplit
+# ------------------------------------------------------------------------
+
+
+
+# --- [SHREC2017 @0.9700/0.9390] ----------------
+0.9071 ->- [72f7]-280722.1551 ->- SHREC2017.3d-14G-[frontaway]
+0.9012 ->- [5a67]-280722.1945 ->- SHREC2017.3d-14G-[custom]
+0.9012 ->- [447f]-280722.1433 ->- SHREC2017.3d-14G-[frontto]
+0.8262 ->- [3af2]-280722.1826 ->- SHREC2017.3d-14G-[sideleft]
+0.8155 ->- [fd1f]-280722.1709 ->- SHREC2017.3d-14G-[sideright]
+0.8060 ->- [a4bf]-280722.1314 ->- SHREC2017.3d-14G-[topdown]
+
+0.9393 ->- [480a]-290722.1824 ->- SHREC2017.3d-14G-[frontto|custom]
+0.9369 ->- [edfc]-280722.2345 ->- SHREC2017.3d-14G-[sideright|frontto]
+0.9357 ->- [d6c5]-280722.2118 ->- SHREC2017.3d-14G-[sideright|topdown]
+0.9357 ->- [80ff]-290722.1600 ->- SHREC2017.3d-14G-[frontto|sideleft]
+0.9357 ->- [0fce]-290722.0931 ->- SHREC2017.3d-14G-[sideleft|topdown]
+0.9345 ->- [01cb]-290722.0420 ->- SHREC2017.3d-14G-[topdown|sideleft]
+0.9333 ->- [cf40]-300722.0557 ->- SHREC2017.3d-14G-[frontaway|custom]
+0.9333 ->- [4b69]-290722.0200 ->- SHREC2017.3d-14G-[topdown|sideright]
+
+0.9381 ->- [1dec]-010822.1513 ->- SHREC2017.3d-14G-[frontto]-i20
+0.9286 ->- [c319]-010822.1513 ->- SHREC2017.3d-14G-[frontaway]-i20
+0.9131 ->- [395b]-010822.1513 ->- SHREC2017.3d-14G-[custom]-i20
+0.8762 ->- [6940]-010822.1513 ->- SHREC2017.3d-14G-[sideleft]-i20
+
+0.9631 ->- [6978]-010822.1614 ->- SHREC2017.3d-14G-[frontto|custom]-i20
+0.9560 ->- [05a5]-010822.1617 ->- SHREC2017.3d-14G-[frontaway|custom]-i20
+0.9548 ->- [e5cf]-010822.1752 ->- SHREC2017.3d-14G-[sideright|frontto]-i20
+0.9452 ->- [8ba9]-010822.1759 ->- SHREC2017.3d-14G-[frontto|sideleft]-i20
+0.9250 ->- [4db9]-010822.1617 ->- SHREC2017.3d-14G-[sideleft|topdown]-i20
+0.9179 ->- [8616]-010822.1616 ->- SHREC2017.3d-14G-[sideright|topdown]-i20
+0.9143 ->- [9bf9]-010822.1800 ->- SHREC2017.3d-14G-[topdown|sideleft]-i20
+0.9131 ->- [f9e8]-010822.1800 ->- SHREC2017.3d-14G-[topdown|sideright]-i20
+
+0.9786 ->- [fa0e]-020822.0743 ->- SHREC2017.3d-14G-[frontaway|custom|frontto]-i20
+0.9762 ->- [fa04]-020822.1005 ->- SHREC2017.3d-14G-[frontaway|custom|sideright]-i20
+0.9750 ->- [bf23]-020822.0518 ->- SHREC2017.3d-14G-[sideright|frontto|frontaway]-i20
+0.9750 ->- [8e95]-020822.0727 ->- SHREC2017.3d-14G-[frontto|custom|frontaway]-i20
+0.9726 ->- [3717]-020822.0943 ->- SHREC2017.3d-14G-[frontto|custom|sideright]-i20
+0.9690 ->- [cd7a]-020822.0522 ->- SHREC2017.3d-14G-[frontaway|custom|sideleft]-i20
+0.9643 ->- [92de]-020822.0510 ->- SHREC2017.3d-14G-[frontto|custom|sideleft]-i20
+0.9619 ->- [9860]-020822.0522 ->- SHREC2017.3d-14G-[frontto|sideleft|frontaway]-i20
+0.9548 ->- [3877]-020822.0744 ->- SHREC2017.3d-14G-[frontto|sideleft|sideright]-i20
+0.9488 ->- [09fd]-020822.1008 ->- SHREC2017.3d-14G-[frontto|sideleft|custom]-i20
+0.9417 ->- [c390]-020822.1001 ->- SHREC2017.3d-14G-[sideright|frontto|sideleft]-i20
+0.9393 ->- [571d]-020822.0739 ->- SHREC2017.3d-14G-[sideright|frontto|custom]-i20
+
+0.9536 ->- [9438]-030822.1543 ->- SHREC2017.3d-28G-[frontaway|custom|frontto]-i20
+0.9321 ->- [f6f7]-030822.1557 ->- SHREC2017.3d-28G-[frontaway|custom|sideright]-i20
+# ------------------------------------------------------------------------
+
+
+# --- [DHG1428 @0.9631/0.9405] ------------------
+0.8405 ->- [db775e21]-180622.1655 ->- DHG1428.3d-14G-[frontto]
+0.8321 ->- [8f62f934]-180622.1542 ->- DHG1428.3d-14G-[frontaway]
+0.8024 ->- [10e61956]-180622.1424 ->- DHG1428.3d-14G-[topdown]
+0.7976 ->- [976951f0]-180622.1543 ->- DHG1428.3d-14G-[custom]
+0.7690 ->- [5d40cdba]-180622.1701 ->- DHG1428.3d-14G-[sideleft]
+0.7476 ->- [2d50abb5]-180622.1424 ->- DHG1428.3d-14G-[sideright]
+
+0.8714 ->- [d41305f3]-190622.2220 ->- DHG1428.3d.14G-[custom|frontto]
+0.8548 ->- [7c4e2380]-190622.1726 ->- DHG1428.3d.14G-[custom|topdown]
+0.8643 ->- [e1238405]-190622.1727 ->- DHG1428.3d.14G-[frontaway|topdown]
+0.8512 ->- [faf2db36]-200622.0550 ->- DHG1428.3d.14G-[sideleft|topdown]
+0.8536 ->- [65757e89]-180622.2256 ->- DHG1428.3d.14G-[sideright|topdown]
+0.8798 ->- [138a3687]-200622.0016 ->- DHG1428.3d.14G-[topdown|custom]
+0.8548 ->- [f618eabf]-190622.0659 ->- DHG1428.3d.14G-[topdown|frontaway]
+0.8679 ->- [09f525d1]-190622.1452 ->- DHG1428.3d.14G-[topdown|sideright]
+
+0.8679 ->- [75e9]-220722.2112 ->- DHG1428.3d-14G-[frontto]-i20
+0.8571 ->- [8f7a]-220722.2112 ->- DHG1428.3d-14G-[frontaway]-i20
+0.8345 ->- [0ebe]-220722.2112 ->- DHG1428.3d-14G-[topdown]-i20
+0.8298 ->- [18eb]-220722.2112 ->- DHG1428.3d-14G-[custom]-i20
+
+0.9310 ->- [5d62]-230722.0020 ->- DHG1428.3d-14G-[frontaway|topdown]-i20
+0.9238 ->- [f037]-220722.1651 ->- DHG1428.3d-14G-[topdown|custom]-i20
+0.9226 ->- [229f]-220722.1651 ->- DHG1428.3d-14G-[custom|topdown]-i20
+0.9202 ->- [e43a]-230722.0022 ->- DHG1428.3d-14G-[sideright|topdown]-i20
+0.9179 ->- [1f48]-230722.0020 ->- DHG1428.3d-14G-[topdown|frontaway]-i20
+0.9119 ->- [76df]-220722.1651 ->- DHG1428.3d-14G-[sideleft|topdown]-i20
+0.9095 ->- [c24b]-230722.0020 ->- DHG1428.3d-14G-[custom|frontto]-i20
+0.8976 ->- [bf95]-220722.1651 ->- DHG1428.3d-14G-[topdown|sideright]-i20
+
+0.9595 ->- [a20b]-020822.1452 ->- DHG1428.3d-14G-[sideright|topdown|frontaway]-i20
+0.9548 ->- [0c78]-020822.1445 ->- DHG1428.3d-14G-[custom|topdown|frontaway]-i20
+0.9512 ->- [b449]-020822.1228 ->- DHG1428.3d-14G-[frontaway|topdown|custom]-i20
+0.9464 ->- [d75a]-020822.1415 ->- DHG1428.3d-14G-[topdown|custom|frontaway]-i20
+0.9464 ->- [8061]-020822.1450 ->- DHG1428.3d-14G-[frontaway|topdown|sideright]-i20
+0.9393 ->- [b242]-020822.1159 ->- DHG1428.3d-14G-[topdown|custom|sideright]-i20
+0.9298 ->- [984a]-020822.1230 ->- DHG1428.3d-14G-[sideright|topdown|custom]-i20
+0.9214 ->- [108a]-020822.1223 ->- DHG1428.3d-14G-[custom|topdown|sideright]-i20
+
+0.9036 ->- [8cc8]-030822.1557 ->- DHG1428.3d-28G-[custom|topdown|frontaway]-i20
+0.8976 ->- [54ee]-030822.1555 ->- DHG1428.3d-28G-[sideright|topdown|frontaway]-i20
+
+0.9583 ->- [90ea]-060822.1623 ->- DHG1428.3d-14G-[custom|topdown|frontaway]-i25
+0.9488 ->- [f134]-060822.1623 ->- DHG1428.3d-14G-[sideright|topdown|frontaway]-i25
+
+0.9179 ->- [d791]-030822.1823 ->- DHG1428.3d-28G-[sideright|topdown|frontaway]-i25
+0.9238 ->- [1ad7]-030822.1823 ->- DHG1428.3d-28G-[custom|topdown|frontaway]-i25
+# ------------------------------------------------------------------------

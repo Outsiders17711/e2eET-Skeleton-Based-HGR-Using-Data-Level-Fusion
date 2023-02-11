@@ -1,0 +1,266 @@
+// references:
+// -- https://json-schema.org/learn/getting-started-step-by-step.html
+// -- https://code.visualstudio.com/docs/languages/json
+// -- https://json-schema.org/understanding-json-schema/reference/conditionals.html
+
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "dhg1428-schema",
+    "title": "Schema/Documentation For HGR Datasets .hgr-configs",
+    "type": "object",
+
+
+
+    "properties": {
+        // --- global Parameters ---
+        // --------------------------------------
+        "connection_map": {
+            "description": "the (N-1)*2 zero-indexed array/list depicting the correct pairs of connected landmarks in a skeleton. N is the total number of landmarks",
+            "type": "array",
+            "items": {"type": "array"}
+        },
+                
+        "dataset_subset": {
+            "description": "the dataset split to be loaded from the pickle file when generating the data-level-fusion dataset i.e. training, validation or both.",
+            "type": "string",
+            "enum": ["train", "valid", "all"],
+            "default": "all"
+        },
+                
+        "create_test_subset": {
+            "description": "an option to further split the validation subset into ~equally-sized validation and testing subsets ",
+            "type": "boolean",
+            "default": false
+        },
+        
+        "images_dataset_directory": {
+            "description": "the (absolute/relative) base directory path where the generated dataset images are saved on disk",
+            "type": "string",
+            "default": "./images_d/dhg1428-dataset"
+        },
+
+        "dataset_pickle_file": {
+            "description": "the pickle file containing the dictionaries/lists/arrays of the dataset gesture sequences and corresponding (string & integer) labels",
+            "type": "string"
+        },
+
+        "dataset_create_mode": {
+            "description": "choose to run the code in dataset creation mode or debugging/viewing mode",
+            "type": "boolean",
+            "enum": [true, false],
+            "default": false
+        },
+
+        "n_joint_coordinates": {
+            "description": "the number of coordinates for each skeleton landmark; 2 (x, y) or 3 (x, y, z)",
+            "type": "integer",
+            "enum": [2, 3],
+            "default": 3
+        },
+
+        "sz_canvas": {
+            "description": "the square size (width and height) for the vispy canvas/window",
+            "type": "integer",
+            "minimum": 240,
+            "maximum": 1080,
+            "multipleOf": 120,
+            "default": 960
+        },
+
+        "n_processes": {
+            "description": "an optional number of simultaneous (parallel) GUI process to run in debugging/viewing mode; defaults to `os.cpu_count()-2` in dataset creation mode",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "default": 1
+        },
+
+        "add_vo_temporal_gradations": {
+            "description": "an option to integrate temporal encoding in form if color transparency gradations to the finger colors and temporal trails for each gesture sequence",
+            "type": "boolean",
+            "default": true
+        },
+
+        "add_vo_skeletons": {
+            "description": "an option to add the hand skeleton to the temporal encoding each gesture sequence",
+            "type": "boolean",
+            "default": true
+        },
+
+
+        // --- sVO/mVO Parameters ---
+        // --------------------------------------
+        "n_dataset_classes": {
+            "description": "the number of output classes in the created dataset; 14/28",
+            "type": "integer",
+            "enum": [14, 28],
+            "default": 14
+        },
+
+        "fps": {
+            "description": "the number of frames rendered per second; this only applies if not in `dataset_create_mode`",
+            "type": "integer",
+            "default": 1000,
+            "minimum": 250,
+            "multipleOf": 250
+        },
+
+        "finger_tips": {
+            "description": "the zero-indexed array/list of landmarks representing the fingertips in a skeleton",
+            "type": "array",
+            "minLength": 5,
+            "items": {"type": "number"}
+        },
+
+        "fingers_colors": {
+            "description": "the list-of-lists with key/value pairs of skeleton landmarks/valid css color for each landmark in a skeleton",
+            "type": "array"
+        },
+
+        "temporal_trails": {
+            "description": "the preferred representation for the temporal encoding",
+            "type": "string",
+            "enum": ["markers", "lines"],
+            "default": "markers"
+        },
+
+        "w_visuals": {
+            "description": "the base weight of drawings/renderings in the scene",
+            "type": "number",
+            "default": 3.5,
+            "minimum": 1,
+            "maximum": 7.5,
+            "multipleOf": 0.5
+        },
+
+        "sequence_fitting": {
+            "description": "the type of post-processing/normalization applied to the raw gesture sequences so that they fit within the defined canvas size; overrides the use of scale factors and paddings",
+            "type": "string",
+            "enum": ["min-max", "mean", "adaptive", "adaptive-mean", "legacy"],
+            "default": "adaptive-mean"
+        },
+
+        "w_h_canvas": {
+            "description": "the optional (w, h) array of width and height values for the vispy canvas/window",
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 128
+            },
+            "maxItems": 2,
+            "minItems": 1,
+            "default": [1280, 720]
+        },
+
+        "x_y_z_offsets": {
+            "description": "an optional list/tuple of x, y, and z offsets to be applied to the raw gesture sequences",
+            "type": "array",
+            "items": {
+                "type": "number",
+                "minimum": 0
+            },
+            "maxItems": 3,
+            "minItems": 3,
+            "default": [0.0, 0.0, 0.0]
+        },
+
+        "scale_factor": {
+            "description": "an optional scaling factor to be applied to the raw gesture sequences",
+            "type": "number",
+            "minimum": 1.0,
+            "default": 1.0
+        },
+
+        "view_orientation": {
+            "description": "an optional specification of the camera orientation(s) in the vispy view/scene object",
+            "type": ["string", "array"],
+            "items": {
+                "type": "string",
+                "enum": ["top-down", "front-to", "front-away", "side-right", "side-left", "custom", "allVOs"]
+            },
+            "minItems": 1,
+            "maxItems": 6,
+            "default": "allVOs"
+        },
+
+        "opencv_mode": {
+            "description": "when `view_orientation` is an array, an optional choice to display an opencv stack of the listed views instead of the default `custom` vispy window",
+            "type": "boolean",
+            "default": false
+        },
+
+        "denoise_dataset": {
+            "description": "whether to apply a denoising/smoothening operation as part of the dataset preprocessing stage or not",
+            "type": "boolean",
+            "default": false
+        },
+
+        "n_denoised_skeletons": {
+            "description": "an optional number of evenly-spaced skeletons to sample from each denoised/smoothened gesture sequence; defaults to 0 (i.e. no sampling) if a value greater than the length of the gesture sequence is provided; this is a required property if `denoise_dataset` is set to `true`",
+            "type": "integer",
+            "default": 0
+        },
+
+        "sz_denoising_filter": {
+            "description": "the size of the denoising filter if `denoise_dataset` is set to `true`",
+            "type": "integer",
+            "default": 6,
+            "minimum": 3,
+            "maximum": 30
+        },
+
+
+        // --- ssPV Parameters ---
+        // --------------------------------------
+        "create_posture_variations": {
+            "description": "an option to create sparsely-sampled posture variation images along with the spatiotemporal images",
+            "type": "boolean",
+            "default": false
+        },
+
+        "add_sspv_optical_flow": {
+            "description": "an option to integrate optical flow vectors with the sparsely-sampled posture variations (skeletons) created for each gesture sequence",
+            "type": "boolean",
+            "default": false
+        },
+
+        "add_sspv_temporal_gradations": {
+            "description": "an option to integrate temporal encoding in form if grayscale gradation to the sparsely-sampled posture variations (skeletons) created for each gesture sequence",
+            "type": "boolean",
+            "default": false
+        },
+
+        "sspv_grid_sizes": {
+            "description": "the M x M grids of equally-spaced sparsely-sampled posture variations (skeletons) created for each gesture sequence",
+            "type": "array",
+            "items": {
+                "type": "number",
+                "enum": [2, 3, 4, 5, 6, 7, 8]
+            },
+            "default": [4, 5]
+        },
+
+        "n_sampled_sspv_skeletons": {
+            "description": "the number of sparsely-sampled posture variations (skeletons) with/without flow vectors created for each gesture sequence",
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 15,
+            "default": 5
+        },
+
+
+        // --- null ---
+        // --------------------------------------
+        // "": {
+        //     "description": "",
+        //     "type": "",
+        //     "enum": [],
+        //     "default": ""
+        // },
+        "---": {}
+    },
+
+    "required": [
+        "connection_map", "create_test_subset", "images_dataset_directory", "dataset_pickle_file", "dataset_create_mode", "n_joint_coordinates", "temporal_trails", "add_vo_temporal_gradations", "add_vo_skeletons"
+    ]
+}

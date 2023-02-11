@@ -1,0 +1,29 @@
+{
+    "connection_map": [
+        [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6],
+        [6, 7], [7, 8], [0, 9], [9, 10], [10, 11], [11, 12], [0, 13],
+        [13, 14], [14, 15], [15, 16], [0, 17], [17, 18], [18, 19], [19, 20]
+    ],
+    "finger_tips": [4, 8, 12, 16, 20],
+    "fingers_colors": [
+        [4, "red"], [3, "red"], [2, "red"], [1, "red"], [0, "red"],
+        [8, "lime"], [7, "lime"], [6, "lime"], [5, "lime"],
+        [12, "blue"], [11, "blue"], [10, "blue"], [9, "blue"],
+        [16, "yellow"], [15, "yellow"], [14, "yellow"], [13, "yellow"],
+        [20, "deeppink"], [19, "deeppink"], [18, "deeppink"], [17, "deeppink"]
+    ],
+
+    "dataset_create_mode": true,
+    "create_test_subset": false,
+    "create_posture_variations": false,
+    "add_vo_temporal_gradations": true,
+    "add_vo_skeletons": true,
+    "temporal_trails": "markers",
+
+    "n_joint_coordinates": 3,
+
+    "dataset_pickle_file": "./datasets/FPHA_<ND>_dictPaperSplit_l250_s1175.pckl",
+    "images_dataset_directory": "./images_d/FPHA.mVOs-dictPaperSplit-<ND>.V1-<DNSD?>.<NPX>",
+
+    "---": ""
+}

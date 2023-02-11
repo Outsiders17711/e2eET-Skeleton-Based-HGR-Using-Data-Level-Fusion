@@ -1,0 +1,14 @@
+**/__pycache__
+.vscode
+
+experiments.server/archive/tmp.ipynb
+live-stream-pipeline-demo/.sources/[bf75]-7G-[cm_td_fa]-Server.pkl
+
+datasets/
+images_d/
+models/
+live-stream-pipeline-demo/.sources/
+runs.server/
+
+live-stream-pipeline-demo/hgr_live_demo_video.mp4
+DON'T-README.md
