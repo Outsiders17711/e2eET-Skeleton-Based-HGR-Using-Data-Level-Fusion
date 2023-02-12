@@ -1,14 +1,13 @@
-**/__pycache__
+# usual excludes
 .vscode
+**/__pycache__
 
-experiments.server/archive/tmp.ipynb
-live-stream-pipeline-demo/.sources/[bf75]-7G-[cm_td_fa]-Server.pkl
-
+# large files
 datasets/
 images_d/
-models/
-live-stream-pipeline-demo/.sources/
-runs.server/
+real-time-HGR-application/.sources/
 
-live-stream-pipeline-demo/hgr_live_demo_video.mp4
-DON'T-README.md
+# temporary files
+archive/
+*/allDatasets-e2eEnsembleTuning-Analysis.ipynb
+*/allDatasets.e2eEnsembleTuning-Checkpoints.yml
