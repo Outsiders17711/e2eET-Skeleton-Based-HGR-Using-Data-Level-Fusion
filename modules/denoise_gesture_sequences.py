@@ -1,4 +1,9 @@
+# e2eET Skeleton Based HGR Using Data-Level Fusion
+# pyright: reportGeneralTypeIssues=false
+# pyright: reportWildcardImportFromLibrary=false
+# ---------------------------------------------------------
 import numpy as np
+
 
 # [SMMOTHENING FUNCTIONS]______________________________________________________
 # [REFERENCE]: https://stackoverflow.com/a/63458548
@@ -56,12 +61,8 @@ def denoise_gesture_sequences(ds_sequences, sz_filter=10, n_samples=None, smthn_
         _s_ = []
         for xyz in range(s_shape[0]):
             for lm in range(s_shape[1]):
-                # s[xyz, lm] = smthn_function(s[xyz, lm], sz_filter)
-                # ^^^ breaks for `smthn_function`s that result in shorter arrays e.g. np_cumsum
                 _s_.append(smthn_function(s[xyz, lm], sz_filter))
 
-        # ds_sequences[idx] = np.array(_s_).reshape(*s_shape[:2], -1).transpose()
-        # ^^^ breaks for `smthn_function`s that result in shorter arrays e.g. np_cumsum
         _ds_sequences_.append(np.array(_s_).reshape(*s_shape[:2], -1).transpose())
 
     _ds_sequences_ = np.array(_ds_sequences_)

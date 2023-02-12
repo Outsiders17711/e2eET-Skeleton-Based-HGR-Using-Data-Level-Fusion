@@ -1,3 +1,4 @@
+# e2eET Skeleton Based HGR Using Data-Level Fusion
 # Dynamic Hand Gestures Classification: FPHA Dataset
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
@@ -28,7 +29,6 @@ from denoise_gesture_sequences import denoise_gesture_sequences
 
 # [DESC]: creating, for each gesture sequence:
 # ------  @vispy: (spatio)temporal image(s) from a list of specified view orientations
-# ------  @opencv: sparsely sampled posture variations (skeletons) grids (and grid components)
 
 
 # [HGR FUNCTIONS]______________________________________________________________
@@ -611,5 +611,4 @@ if __name__ == "__main__":
 
 # [>>>>>]____________________________________________________________
 # python modules/create_imgs_v5_FPHAd_mVOs.py -c "modules/.configs/fpha-v5-default.hgr-config"
-# mVOs-V1: 00:04:30h
-# mVOs-V2: 00:02:00h
+# mVOs: 00:02:00h

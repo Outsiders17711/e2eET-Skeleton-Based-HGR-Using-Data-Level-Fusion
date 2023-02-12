@@ -15,7 +15,6 @@
 
     "dataset_create_mode": false,
     "create_test_subset": false,
-    "create_posture_variations": true,
     "add_vo_temporal_gradations": true,
     "add_vo_skeletons": true,
     "temporal_trails": "markers",
@@ -24,8 +23,7 @@
     "n_dataset_classes": 14,
 
     "dataset_pickle_file": "./datasets/DHG1428_<ND>_dictTVS_l250_s2800.pckl",
-    "images_dataset_directory": "./images/DHG1428.mVOs.ssPVs-<ND>.<NG>-<DNSD?>.<NPX>",
-
+    "images_dataset_directory": "./images/DHG1428.mVOs-<ND>.<NG>-<DNSD?>.<NPX>",
 
     "---": ""
 }

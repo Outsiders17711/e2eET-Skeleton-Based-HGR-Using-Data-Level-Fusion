@@ -1,3 +1,4 @@
+# e2eET Skeleton Based HGR Using Data-Level Fusion
 # Dynamic Hand Gestures Classification: SHREC 2017 Dataset
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
@@ -24,12 +25,10 @@ from vispy.util.event import Event
 import matplotlib.colors as mcolors
 
 from denoise_gesture_sequences import denoise_gesture_sequences
-from sparsely_sampled_posture_variations_v2 import sparselysampledPostureVariations
 
 
 # [DESC]: creating, for each gesture sequence:
 # ------  @vispy: (spatio)temporal image(s) from a list of specified view orientations
-# ------  @opencv: sparsely sampled posture variations (skeletons) grids (and grid components)
 
 
 # [HGR FUNCTIONS]______________________________________________________________
@@ -225,9 +224,6 @@ def _create_sequence_png(dir):
         prefix = ""
     dir.mkdir(exist_ok=True, parents=True)
 
-    if cfg.create_posture_variations:
-        cfg.sspv_creator.one_sspv_sequence(ds_g_sequences[seq_idx], dir, prefix)
-
     pause = not pause
     for v in cfg.v_orientation:
         _set_view(v)
@@ -351,7 +347,6 @@ class loadConfigArguments:
         self.n_joint_coordinates = config["n_joint_coordinates"]
         self.n_dataset_classes = config["n_dataset_classes"]
         self.temporal_trails = config["temporal_trails"]
-        self.create_posture_variations = config["create_posture_variations"]
 
         self.create_test_subset = config["create_test_subset"]
         self.dataset_create_mode = config["dataset_create_mode"]
@@ -367,10 +362,6 @@ class loadConfigArguments:
         self.v_orientation = config.setdefault("view_orientation", "allVOs")
         self.s_fitting = config.setdefault("sequence_fitting", "adaptive-mean")
         self.denoise_dataset = config.setdefault("denoise_dataset", False)
-
-        self.sspv_optical_flow = config.setdefault("add_sspv_optical_flow", False)
-        self.sspv_grid_sizes = config.setdefault("sspv_grid_sizes", [4, 5])
-        self.sspv_temporal_gradations = config.setdefault("add_sspv_temporal_gradations", False)
 
         self.ds_pckl_file = config["dataset_pickle_file"].replace("<ND>", f"{self.n_joint_coordinates}d")
 
@@ -399,18 +390,6 @@ class loadConfigArguments:
 
         if self.n_joint_coordinates == 2:
             self.v_orientation = ["front-to"]
-
-        if self.create_posture_variations:
-            self.sspv_creator = sparselysampledPostureVariations(
-                sz_canvas=self.sz_canvas,
-                connection_map=self.connection_map,
-                grid_sizes=self.sspv_grid_sizes,
-                scale_factor=(1000 if self.n_joint_coordinates == 3 else 1),
-                dataset_create_mode=self.dataset_create_mode,
-                add_sspv_temporal_gradations=self.sspv_temporal_gradations,
-                add_optical_flow=self.sspv_optical_flow,
-                save_grid_components=False,
-            )
 
     # ---
     def str_v_orientation(self, delimiter="."):
@@ -639,5 +618,5 @@ if __name__ == "__main__":
         playsound.playsound(r"./modules/notification.mp3", block=True)
 
 # [>>>>>]____________________________________________________________
-# python modules/create_imgs_v5_SHREC2017d_mVOs_ssPVs.py -c "modules/.configs/shrec2017-v5-default.hgr-config"
-# mVOs: 00:11:00h | mVOs+ssPVs: 00:13:00h
+# python modules/create_imgs_v5_SHREC2017d_mVOs.py -c "modules/.configs/shrec2017-v5-default.hgr-config"
+# mVOs: 00:11:00h

@@ -15,7 +15,6 @@
 
     "dataset_create_mode": true,
     "create_test_subset": false,
-    "create_posture_variations": false,
     "add_vo_temporal_gradations": true,
     "add_vo_skeletons": true,
     "temporal_trails": "markers",

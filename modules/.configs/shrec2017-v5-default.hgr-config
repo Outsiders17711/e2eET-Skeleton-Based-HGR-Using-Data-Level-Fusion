@@ -1,31 +1,29 @@
 {
     "connection_map": [
-        [0, 2], [2, 3], [3, 4], [4, 5], [0, 1], [1, 6], [6, 7], 
-        [7, 8], [8, 9], [1, 10], [10, 11], [11, 12], [12, 13], [1, 14], 
+        [0, 2], [2, 3], [3, 4], [4, 5], [0, 1], [1, 6], [6, 7],
+        [7, 8], [8, 9], [1, 10], [10, 11], [11, 12], [12, 13], [1, 14],
         [14, 15], [15, 16], [16, 17], [1, 18], [18, 19], [19, 20], [20, 21]
     ],
     "finger_tips": [5, 9, 13, 17, 21],
     "fingers_colors": [
-        [5, "red"], [4, "red"], [3, "red"], [2, "red"], [0, "red"], [1, "red"], 
-        [6, "lime"], [9, "lime"], [8, "lime"], [7, "lime"], 
-        [13, "blue"], [12, "blue"], [11, "blue"], [10, "blue"], 
-        [17, "yellow"], [16, "yellow"], [15, "yellow"], [14, "yellow"], 
+        [5, "red"], [4, "red"], [3, "red"], [2, "red"], [0, "red"], [1, "red"],
+        [6, "lime"], [9, "lime"], [8, "lime"], [7, "lime"],
+        [13, "blue"], [12, "blue"], [11, "blue"], [10, "blue"],
+        [17, "yellow"], [16, "yellow"], [15, "yellow"], [14, "yellow"],
         [21, "deeppink"], [20, "deeppink"], [19, "deeppink"], [18, "deeppink"]
     ],
-    
+
     "dataset_create_mode": false,
     "create_test_subset": false,
-    "create_posture_variations": false,
     "add_vo_temporal_gradations": true,
     "add_vo_skeletons": true,
     "temporal_trails": "markers",
 
     "n_joint_coordinates": 3,
     "n_dataset_classes": 28,
-    
+
     "dataset_pickle_file": "./datasets/SHREC2017_<ND>_dictTVS_l250_s2800.pckl",
     "images_dataset_directory": "./images_d/SHREC2017.mVOs-<ND>.<NG>-<DNSD?>.<NPX>",
-    
 
     "---": ""
 }
