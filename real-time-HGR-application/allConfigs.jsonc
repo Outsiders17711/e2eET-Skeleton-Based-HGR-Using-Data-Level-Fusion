@@ -1,0 +1,64 @@
+{
+    "mp_connection_map": [
+        [0, 1], [1,2], [2, 3], [3, 4],
+        [0, 5], [5, 6], [6, 7], [7, 8],
+        [0, 9], [9, 10], [10, 11], [11, 12],
+        [0, 13], [13, 14], [14, 15], [15, 16],
+        [0, 17], [17, 18], [18, 19], [19, 20]
+    ],
+    "mp_finger_tips": [4, 8, 12, 16, 20],
+    "mp_fingers_colors": [
+        [4, "red"], [3, "red"], [2, "red"], [0, "red"], [1, "red"],
+        [8, "lime"], [7, "lime"], [6, "lime"], [5, "lime"],
+        [12, "blue"], [11, "blue"], [10, "blue"], [9, "blue"],
+        [16, "yellow"], [15, "yellow"], [14, "yellow"], [13, "yellow"],
+        [20, "deeppink"], [19, "deeppink"], [18, "deeppink"], [17, "deeppink"]
+    ],
+
+
+    "dhg_connection_map": [
+        [0, 1],
+        [0, 2], [2, 3], [3, 4], [4, 5],
+        [1, 6], [6, 7], [7, 8], [8, 9],
+        [1, 10], [10, 11], [11, 12], [12, 13],
+        [1, 14], [14, 15], [15, 16], [16, 17],
+        [1, 18], [18, 19], [19, 20], [20, 21]
+    ],
+    "dhg_finger_tips": [5, 9, 13, 17, 21],
+    "dhg_fingers_colors": [
+        [5, "red"], [4, "red"], [3, "red"], [2, "red"], [0, "red"], [1, "red"],
+        [6, "lime"], [9, "lime"], [8, "lime"], [7, "lime"],
+        [13, "blue"], [12, "blue"], [11, "blue"], [10, "blue"],
+        [17, "yellow"], [16, "yellow"], [15, "yellow"], [14, "yellow"],
+        [21, "deeppink"], [20, "deeppink"], [19, "deeppink"], [18, "deeppink"]
+    ],
+
+
+    "debug_mode": false,
+    "dhg1428_mode": true,
+    "cpu_mode": true,
+
+
+    "add_vo_temporal_gradations": true,
+    "add_vo_skeletons": true,
+    "temporal_trails": "markers",
+    "sz_canvas": 640,
+    "view_orientation": ["custom", "top-down", "front-away"],
+
+
+    "data_directory": "./data-dlf/",
+    "images_directory": "./data-gci/",
+    "hgr_archive": "./.archive/",
+    "hgr_log": "./hgr_output_log.yml",
+
+
+    "MAX_HISTORY": 711,
+    "HISTORY_BUFFER": 0,
+    "LOGGER_THRESHOLD": 0.00,
+    "FRAME_SIZE": 960,
+    "VERBOSE": false,
+    "MP_DRAWINGS": false,
+
+
+    "": ""
+}
