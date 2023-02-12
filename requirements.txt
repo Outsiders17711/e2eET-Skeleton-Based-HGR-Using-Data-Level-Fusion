@@ -12,3 +12,4 @@ playsound==1.2.2
 mediapipe==0.8.7.1
 ipython==8.10.0
 secrets==1.0.2
+tensorboard==2.8.0
