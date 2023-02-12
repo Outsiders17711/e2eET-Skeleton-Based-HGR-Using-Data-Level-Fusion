@@ -144,12 +144,12 @@ To reproduce the evaluation results reported in the paper, the notebook `./exper
 ## Live Real-Time HGR Application
 
 <p align="center">
-  <img src="./images/hgr-live-demo-video.gif" alt="hgr-live-demo-video">
+  <img src="./images/hgr_live_demo_video.gif" alt="hgr_live_demo_video">
 </p>
 
 The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + | V | X }` gestures from the DHG1428 dataset in both in both 14G/28G modes, i.e., the gestures can be performed using one finger and the whole hand.
 
-`./images/dhg1428-swipe-gestures.png` shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr-live-demo-video.mp4`](./images/hgr-live-demo-video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
+`./images/dhg1428-swipe-gestures.png` shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
 
 > **The trained (.pkl) models required for the real-time application can be downloaded from this [drive folder]() and extracted to the `./real-time-HGR-application/.sources` directory.**
 
