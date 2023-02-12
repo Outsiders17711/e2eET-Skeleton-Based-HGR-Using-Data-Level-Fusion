@@ -1,3 +1,4 @@
+# e2eET Skeleton Based HGR Using Data-Level Fusion
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportWildcardImportFromLibrary=false
@@ -22,7 +23,7 @@ from torch.utils.tensorboard.writer import SummaryWriter
 from IPython.display import clear_output
 # ---
 from __main__ import args, deets
-from exp00_helper_functions import *
+from _helperFunctions import *
 
 
 __all__ = [

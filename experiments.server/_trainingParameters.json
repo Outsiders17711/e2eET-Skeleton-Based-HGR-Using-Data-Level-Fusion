@@ -1,0 +1,172 @@
+{
+    "--idx_gpu": {
+        "alias": "-IG",
+        "description": "the index (zero-indexed) of the GPU device used for training; the server used during framework development has 4 GPUs hence the options (enum) below",
+        "type": "integer",
+        "enum": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "--n_classes": {
+        "alias": "-nC",
+        "description": "the number of output classes in the generated spatiotemporal dataset",
+        "type": "integer",
+        "enum": [
+            13,
+            14,
+            16,
+            28,
+            45
+        ]
+    },
+    "--mv_orientations": {
+        "alias": "-mVOs",
+        "description": "the space-separated list view orientation(s) spatiotemporal dataset to be used during training; the number of mVOs determines the number of stream in the network architecture;  note that the ordering of the mVOs is not arbitrary ('VO1 VO2' != 'VO2 VO1')",
+        "type": "string",
+        "minItems": 1,
+        "maxItems": 6,
+        "enum": [
+            "top-down",
+            "front-to",
+            "front-away",
+            "side-right",
+            "side-left",
+            "custom",
+            "allVOs"
+        ]
+    },
+    "ds_name": {
+        "alias": "-dsN",
+        "description": "the name of the benchmark dataset whose spatiotemporal dataset is to be trained",
+        "type": "string",
+        "enum": [
+            "CNR",
+            "LMDHG",
+            "FPHA",
+            "DHG1428",
+            "SHREC2017"
+        ]
+    },
+    "--nd": {
+        "description": "the number of coordinates for each skeleton landmark in the preprocessed dataset; 2d (x, y) or 3d (x, y, z); the codebase works with 3d landmarks so this option should be left as is",
+        "type": "string",
+        "enum": [
+            "3d",
+            "2d"
+        ],
+        "default": "3d"
+    },
+    "--bs": {
+        "description": "the batch size used during training",
+        "type": "integer",
+        "multipleOf": 8,
+        "default": 16
+    },
+    "--architecture": {
+        "description": "the pretrained base architecture used as feature extractor in `sVO.mVO.Checkpoints.py`; see `_modelZoo.py` for all available options",
+        "type": "string",
+        "default": "resnet50"
+    },
+    "--mvo_architecture": {
+        "description": "the pretrained base architecture used as feature extractor for the multi-stream sub-network in `mVO.e2eEnsembleTuning.py`; see `_modelZoo.py` for all available options",
+        "type": "string",
+        "default": "resnet50"
+    },
+    "--tnr_architecture": {
+        "description": "the pretrained base architecture used as feature extractor for the tuner sub-network in `mVO.e2eEnsembleTuning.py`; see `_modelZoo.py` for all available options",
+        "type": "string",
+        "default": "resnet18"
+    },
+    "--lrs_type": {
+        "description": "the learning rate used for each training round; estimated from historical experiments or using an in-built FastAI method (learner.lr_find)",
+        "type": "string",
+        "enum": [
+            "lrHistorical",
+            "lrFinder"
+        ],
+        "default": "lrFinder"
+    },
+    "--ftr_fusion": {
+        "description": "the type of feature-level fusion used on features extracted from multi-stream architectures in `sVO.mVO.Checkpoints.py`",
+        "type": "string",
+        "enum": [
+            "sum",
+            "max",
+            "avg",
+            "cat",
+            "conv"
+        ],
+        "default": "conv"
+    },
+    "--init_img_sz": {
+        "alias": "-IIS",
+        "description": "the size of the spatiotemporal images during the first training round; this depends on the pretrained architecture used as feature extractor",
+        "type": "integer",
+        "default": 224
+    },
+    "--init_eps": {
+        "alias": "-IE",
+        "description": "the number of freeze, unfreeze (, finetuning?) epochs during the first training round",
+        "type": "integer",
+        "enum": [
+            3,
+            5,
+            10,
+            15,
+            20,
+            25,
+            30,
+            35,
+            40
+        ],
+        "default": 20
+    },
+    "--init_itr_scl_eps": {
+        "alias": "-IISE",
+        "description": "the number of freeze, unfreeze (, finetuning?) epochs for an optional iterative scaling training round after first training round",
+        "type": "integer",
+        "enum": [
+            0,
+            5,
+            10,
+            15
+        ],
+        "default": 10
+    },
+    "--itr_scl_sizes": {
+        "alias": "-ISE",
+        "description": "the iterative scaling sizes of the spatiotemporal images after the first training round; the default is [224, 224, 276, 328] for 2d and [276, 328, 380] for 3d",
+        "type": "array",
+        "default": [
+            "<OPT>"
+        ]
+    },
+    "--itr_finetuning": {
+        "alias": "-IFT",
+        "description": "this determines if each iterative scaling training round includes finetuning (true) or only the last iterative scaling training round (false)",
+        "type": "boolean",
+        "default": false
+    },
+    "--create_e_tb_events": {
+        "alias": "-CETE",
+        "description": "this determines if tensorboard event logs are created during training",
+        "type": "boolean",
+        "default": true
+    },
+    "--create_e_model_checkpoint": {
+        "alias": "-CEMC",
+        "description": "this determines if the model parameters for the best training round are saved to .pth and .pkl files when training is completed",
+        "type": "boolean",
+        "default": false
+    },
+    "--verbose": {
+        "alias": "-V",
+        "description": "this flag terminates the training just before the dataloader begins; this is useful for debugging and ensuring that there are no errors in the code, filenames, etc",
+        "type": "boolean",
+        "default": false
+    },
+    "---": {}
+}

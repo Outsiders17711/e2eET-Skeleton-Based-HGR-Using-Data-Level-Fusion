@@ -1,4 +1,4 @@
-# Dynamic Hand Gestures Classification
+# e2eET Skeleton Based HGR Using Data-Level Fusion
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------
@@ -9,12 +9,12 @@ os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 import secrets
 from argparse import ArgumentParser
 from fastai.vision.all import *
-from exp00_model_zoo import *
-from exp00_helper_functions import *
+from _modelZoo import *
+from _helperFunctions import *
 
 
 # ---------------------------
-ap = ArgumentParser(description="Dynamic Hand Gestures Classification")
+ap = ArgumentParser(description="e2eET Skeleton Based HGR Using Data-Level Fusion")
 
 # --- required arguments
 ap.add_argument("-IG", "--idx_gpu", required=True, type=int, choices=[0, 1, 2, 3])
@@ -68,7 +68,7 @@ deets = multiDetailsParser(
     learn_directory=learn_directory, ds_directory=ds_directory,
     e_repr_seed=None, e_stt_datetime=None, e_strftime=None, e_details=None,
 )
-from exp00_functions_classes import *
+from _functionsClasses import *
 
 
 # [create.dls.model.learn]
