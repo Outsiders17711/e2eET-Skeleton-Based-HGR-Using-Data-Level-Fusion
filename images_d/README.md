@@ -3,7 +3,7 @@
 ## Data-Level Fusion: Processing Benchmark Datasets
 
 1. **Consiglio Nazionale delle Ricerche (CNR) Hand Gestures Dataset**
-   - Download the [CNR dataset](https://github.com/aviogit/dynamic-hand-gesture-classification-datasets/tree/master/dynamic-hand-gestures-new-CNR-dataset-2k-images) [[alternate link](https://imaticloud.ge.imati.cnr.it/index.php/s/YNRymAvZkndzpU1/download?path=%2F&files=)] and extract to the directory `./images_d/CNR-3d-original-1920px.1080px-[topdown]/`.
+   - Download the [CNR dataset](https://github.com/aviogit/dynamic-hand-gesture-classification-datasets/tree/master/dynamic-hand-gestures-new-CNR-dataset-2k-images) and extract to the directory `./images_d/CNR-3d-original-1920px.1080px-[topdown]/`.
    - Generate the spatiotemporal dataset by running the notebook `./modules/parse-data-CNRd.ipynb`. This will create training and validation subsets from the original dataset.
 
 2. **Leap Motion Dynamic Hand Gesture (LMDHG) Database**
