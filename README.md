@@ -13,7 +13,7 @@ For technical details, please refer to:
 
 > **Skeleton Based Hand Gesture Recognition Using Data Level Fusion** <br>
 > *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* <br>
-> [[IEEE Xplore]](https://ieeexplore.ieee.org/document/9841448) | [[arXiv]](https://ieeexplore.ieee.org/document/9841448)
+> [[IEEE Xplore](https://ieeexplore.ieee.org/document/0000000)] &mdash; [[arXiv](https://ieeexplore.ieee.org/document/0000000)]
 
 A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint.
 The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task on a standard PC while achieving acceptable latency, frames-per-second, and classification accuracy.
@@ -36,7 +36,7 @@ The application underscores the utility of our proposed framework for reducing t
 ## Data-Level Fusion: Processing Benchmark Datasets
 
 1. **Consiglio Nazionale delle Ricerche (CNR) Hand Gestures Dataset**
-   - Download the [CNR dataset](https://github.com/aviogit/dynamic-hand-gesture-classification-datasets/tree/master/dynamic-hand-gestures-new-CNR-dataset-2k-images) [[alternate link](https://imaticloud.ge.imati.cnr.it/index.php/s/YNRymAvZkndzpU1/download?path=%2F&files=)] and extract to the directory `./images_d/CNR-3d-original-1920px.1080px-[topdown]/`.
+   - Download the [CNR dataset](https://github.com/aviogit/dynamic-hand-gesture-classification-datasets/tree/master/dynamic-hand-gestures-new-CNR-dataset-2k-images) and extract to the directory `./images_d/CNR-3d-original-1920px.1080px-[topdown]/`.
    - Generate the spatiotemporal dataset by running the notebook `./modules/parse-data-CNRd.ipynb`. This will create training and validation subsets from the original dataset.
 
 2. **Leap Motion Dynamic Hand Gesture (LMDHG) Database**
@@ -185,7 +185,7 @@ If you find this work contained in this repository useful in your research, plea
 
 ```
 @ARTICLE{
-  <!-- 9841448, -->
+  <!-- 0000000, -->
   author={Yusuf, Oluwaleke and Habib, Maki and Moustafa, Mohamed},
   journal={IEEE Transactions on Image Processing},
   title={Skeleton Based Hand Gesture Recognition Using Data Level Fusion},
@@ -200,6 +200,6 @@ If you find this work contained in this repository useful in your research, plea
 
 ## Contact
 
-For any questions, feel free to contact: `oluwaleke.umar@aucegypt.edu`.
+For any questions, feel free to contact: `oluwaleke.umar@aucegypt.edu`
 
 <hr>
