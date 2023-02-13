@@ -16,7 +16,7 @@ For technical details, please refer to:
 > [[IEEE Xplore]](https://ieeexplore.ieee.org/document/9841448) | [[arXiv]](https://ieeexplore.ieee.org/document/9841448)
 
 A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint.
-The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task while achieving acceptable latency, frames-per-second, and classification accuracy on a standard PC.
+The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task on a standard PC while achieving acceptable latency, frames-per-second, and classification accuracy.
 
 <p align="center">
   <img src="./images/generalized-e2eet-network-architecture.png" alt="network-architecture" style="width:480px;">
@@ -32,7 +32,6 @@ The application underscores the utility of our proposed framework for reducing t
 - MediaPipe == 0.8.7.1
 - Other dependencies described in requirements.txt
 
-<hr>
 
 ## Data-Level Fusion: Processing Benchmark Datasets
 
@@ -54,7 +53,7 @@ The application underscores the utility of our proposed framework for reducing t
    - Download the [SHREC2017 dataset](http://www-rech.telecom-lille.fr/shrec2017-hand/) and extract to the directory `./datasets/SHREC2017/`.
    - Preprocess the dataset by running the notebook ./`modules/parse-data-SHREC2017d.ipynb`. This will create a file `./datasets/SHREC2017_3d_dictTVS_l250_s2800.pckl`.
    - To generate the 14G and 28G spatiotemporal datasets:
-      - Modify line 24 in `./modules/.configs/shrec2017-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
+      - Modify line 23 in `./modules/.configs/shrec2017-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
       - Execute `python modules/create_imgs_v5_SHREC2017d_mVOs.py -c "modules/.configs/shrec2017-v5-default.hgr-config"`.
    -  The 14G and 28G spatiotemporal datasets will be saved to `./images_d/SHREC2017.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean` and `./images_d/SHREC2017.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean` respectively.
 
@@ -62,22 +61,21 @@ The application underscores the utility of our proposed framework for reducing t
    - Download the [DHG1428 dataset](http://www-rech.telecom-lille.fr/DHGdataset/) and extract to the directory `./datasets/DHG1428/`.
    - Preprocess the dataset by running the notebook ./`modules/parse-data-DHG1428d.ipynb`. This will create a file `./datasets/DHG1428_3d_dictTVS_l250_s2800.pckl`.
    - To generate the 14G and 28G spatiotemporal datasets:
-      - Modify line 24 in `./modules/.configs/dhg1428-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
+      - Modify line 23 in `./modules/.configs/dhg1428-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
       - Execute `python modules/create_imgs_v5_DHG1428d_mVOs.py -c "modules/.configs/dhg1428-v5-default.hgr-config""`.
    -  The 14G and 28G spatiotemporal datasets will be saved to `./images_d/DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean` and `./images_d/DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean` respectively.
 
 *NOTE: The parameters required to generate the spatiotemporal datasets are set in the `*.hgr-config` files. See `./modules/.configs/all-HGR-ds-schemas.json` for details about the parameters.*
 
-> **Alternatively, the preprocessed .pckl files and generated spatiotemporal datasets can be downloaded from this [drive folder]() and extracted to the corresponding `./datasets` and `./images_d` directories.**
+> **Alternatively, the preprocessed .pckl files and generated spatiotemporal datasets can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1LSzM9pTo6FHxqxH8Bt_YTf4Ky2lSf-gQ?usp=sharing) and extracted to the corresponding `./datasets` and `./images_d` directories.**
 
-<hr>
 
 ## Model Training & Evaluation
 
 The directory `./experiments.server` contains the training and evaluation code for all benchmark datasets. The directory `./runs.server` contains the relevant TensorBoard event logs and model graphs.
 The arguments required for model training are set at the command line. See `./experiments.server/_trainingParameters` for details about the parameters.
 
-*NOTE: Before training, ensure that the `datasetDirectories` object in `./experiments.server/_helperFunctions.py` points to the correct directory for the spatiotemporal datasets generated above and located at `./images_d` such that:*
+*NOTE: Before training, ensure that the `datasetDirectories` object in `./experiments.server/_helperFunctions.py` points to the correct directories for the spatiotemporal datasets generated above and located at `./images_d` such that:*
 
 ```python
 datasetDirectories = {
@@ -95,7 +93,8 @@ datasetDirectories = {
 
 `./experiments.server/sVO.mVO.Checkpoints.py` contains the code for testing the effect of different view orientations in the spatiotemporal datasets generated on classification accuracy of different datasets.
 
-The notebook `./experiments.server/sVO.mVO.Checkpoints.ipynb` contains the necessary command line inputs while `./experiments.server/sVO.mVO.Checkpoints.yml` contains the results of extensive 1SA and 2SA experiments for all datasets. The results of any experiments run will automatically be appended to that file. The TensorBoard event logs can be found in `./runs.server/sVO.mVO.Checkpoints.zip`.
+The notebook `./experiments.server/sVO.mVO.Checkpoints.ipynb` contains the necessary command line inputs while `./experiments.server/sVO.mVO.Checkpoints.yml` contains the results of extensive 1SA and 2SA experiments for all datasets.
+The results of any experiments run will automatically be appended to that file. The TensorBoard event logs can be found in `./runs.server/sVO.mVO.Checkpoints.zip`.
 
 **EX1 &ndash;**
 1SA experiment on `DHG1428` with `14` classes using `top-down` view orientation running on GPU `0`:
@@ -113,20 +112,22 @@ python sVO.mVO.Checkpoints.py -IG 1 -nC 28 -mVOs custom side-left -dsN DHG1428
 
 `./experiments.server/mVO.e2eEnsembleTuning.py` contains the code for training the spatiotemporal datasets using the custom Ensemble Tuner Multi-Stream CNN Architecture shown in the figure above.
 
-The notebook `./experiments.server/mVO.e2eEnsembleTuning.ipynb` contains the necessary command line inputs while `./experiments.server/mVO.e2eEnsembleTuning.yml` contains the results of extensive 1SA, 2SA and 3SA experiments to find the optimal combination and ordering of mVOs for all datasets. The results of any experiments run will automatically be appended to that file. The TensorBoard event logs can be found in `./runs.server/mVO.e2eEnsembleTuning.zip`.
+The notebook `./experiments.server/mVO.e2eEnsembleTuning.ipynb` contains the necessary command line inputs while `./experiments.server/mVO.e2eEnsembleTuning.yml` contains the results of extensive 1SA, 2SA and 3SA experiments to find the optimal combination and ordering of mVOs for all datasets.
+The results of any experiments run will automatically be appended to that file. The TensorBoard event logs can be found in `./runs.server/mVO.e2eEnsembleTuning.zip`.
 
 **EX &ndash;**
 3SA experiment on `DHG1428` with `14` classes using `top-down`, `custom` and `front-away` view orientation running on GPU `0`:
 ```bash
 python mVO.e2eEnsembleTuning.py -IG 0 -nC 14 -mVOs top-down custom front-away -dsN DHG1428 -IISE 0 -ISIS 0
-
 ```
 
 ### Final Evaluation on Benchmark Datasets
 
-The final evaluation for each benchmark dataset was carried out with the optimal combination and ordering of mVOs, along with training schedules. The files `./experiments.server/allDatasets-e2eEnsembleTuning-Summary.xlsx` and `./experiments.server/allDatasets-e2eEnsembleTuning-Summary.yml` summarize how the final classification accuracies were obtained.
+The final evaluation for each benchmark dataset was carried out with the optimal combination and ordering of mVOs, along with training schedules.
+The files `./experiments.server/allDatasets-e2eEnsembleTuning-Summary.xlsx` and `./experiments.server/allDatasets-e2eEnsembleTuning-Summary.yml` summarize how the final classification accuracies were obtained.
 
-To reproduce the evaluation results reported in the paper, the notebook `./experiments.server/allDatasets-e2eEnsembleTuning-Evaluation.ipynb` contains the necessary command line inputs while `./experiments.server/allDatasets-e2eEnsembleTuning-Evaluation.yml` contains the evaluation results. The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembleTuning-Evaluation.zip`.
+To reproduce the evaluation results reported in the paper, the notebook `./experiments.server/allDatasets-e2eEnsembleTuning-Evaluation.ipynb` contains the necessary command line inputs while `./experiments.server/allDatasets-e2eEnsembleTuning-Evaluation.yml` contains the evaluation results.
+The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembleTuning-Evaluation.zip`.
 
 <!-- ˄˅↑↓ -->
 | Benchmark Dataset | Classification Accuracy (%) |
@@ -151,9 +152,9 @@ The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + 
 
 `./images/dhg1428-swipe-gestures.png` shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
 
-> **The trained (.pkl) models required for the real-time application can be downloaded from this [drive folder]() and extracted to the `./real-time-HGR-application/.sources` directory.**
+> **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1LSzM9pTo6FHxqxH8Bt_YTf4Ky2lSf-gQ?usp=sharing) and extracted to the `./real-time-HGR-application/.sources` directory.**
 
-The trained model required for the real-time application is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 44 in `./real-time-HGR-application/gestureClassInference.py` as required.
+*NOTE: The model required is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 45 in `./real-time-HGR-application/gestureClassInference.py` as required.*
 
 To launch the real-time HGR application from the terminal, change your directory to `./real-time-HGR-application` and run `python liveStreamHGR.py`.
 When all the required modules have been initialized (takes a little longer the first time), the terminal output should read:
@@ -177,6 +178,7 @@ When all the application modules (with three windows as shown in `./images/initi
 
 <hr>
 
+
 ## Citation
 
 If you find this work contained in this repository useful in your research, please cite the following paper:
@@ -195,12 +197,9 @@ If you find this work contained in this repository useful in your research, plea
   }
 ```
 
+
 ## Contact
 
 For any questions, feel free to contact: `oluwaleke.umar@aucegypt.edu`.
 
 <hr>
-
-<p align="center">
-  <img src="./images/proposed-framework-block-diagram.png" alt="proposed-framework" style="width:640px;">
-</p>
