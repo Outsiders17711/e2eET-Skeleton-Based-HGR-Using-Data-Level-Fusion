@@ -13,14 +13,14 @@
         [21, "deeppink"], [20, "deeppink"], [19, "deeppink"], [18, "deeppink"]
     ],
 
-    "dataset_create_mode": false,
+    "dataset_create_mode": true,
     "create_test_subset": false,
     "add_vo_temporal_gradations": true,
     "add_vo_skeletons": true,
     "temporal_trails": "markers",
 
     "n_joint_coordinates": 3,
-    "n_dataset_classes": 28,
+    "n_dataset_classes": 14,
 
     "dataset_pickle_file": "./datasets/SHREC2017_<ND>_dictTVS_l250_s2800.pckl",
     "images_dataset_directory": "./images_d/SHREC2017.mVOs-<ND>.<NG>-<DNSD?>.<NPX>",

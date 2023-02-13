@@ -3,11 +3,9 @@
 **/__pycache__
 
 # large files
-datasets/
-images_d/
-real-time-HGR-application/.sources/
+datasets/*.pckl
+images_d/*.rar
+real-time-HGR-application/.sources/*.pkl
 
 # temporary files
 archive/
-*/allDatasets-e2eEnsembleTuning-Analysis.ipynb
-*/allDatasets.e2eEnsembleTuning-Checkpoints.yml

@@ -250,7 +250,7 @@ def get_camera_details():
 # build canvas, add viewbox and initialize visuals
 canvas = scene.SceneCanvas(
     keys="interactive",
-    title="create-imgs-FHDAd",
+    title="create-imgs-LMDHDd",
     app="PyQt5",
     always_on_top=False,
     vsync=False,

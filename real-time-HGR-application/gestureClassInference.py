@@ -1,4 +1,5 @@
-# Dynamic Hand Gestures Classification
+# e2eET Skeleton Based HGR Using Data-Level Fusion
+# Dynamic Hand Gestures Classification: Live Stream Demo
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------

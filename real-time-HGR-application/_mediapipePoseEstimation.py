@@ -1,3 +1,8 @@
+# e2eET Skeleton Based HGR Using Data-Level Fusion
+# pyright: reportGeneralTypeIssues=false
+# pyright: reportOptionalMemberAccess=false
+# pyright: reportWildcardImportFromLibrary=false
+# -----------------------------------------------
 """
 Hand Tracking Module
 By: Computer Vision Zone
@@ -6,7 +11,6 @@ Website: https://www.computervision.zone/
 
 import cv2 as cv
 import mediapipe as mp
-import math
 import numpy as np
 
 
