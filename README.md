@@ -7,13 +7,17 @@
 
 # e2eET Skeleton Based HGR Using Data-Level Fusion
 
-This is the PyTorch/FastAI implementation for **"Skeleton Based Hand Gesture Recognition Using Data Level Fusion"**.
-The proposed hand gesture recognition (HGR) framework transforms the dynamic hand gesture recognition task into a static image classification task using data-level fusion and a custom ensemble tuner multi-stream CNN architecture.
-For technical details, please refer to:
+This repository holds the PyTorch/FastAI implementation for **"Skeleton Based Hand Gesture Recognition Using Data Level Fusion"**.
+Alternatively, this **[drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x)** mirrors this repository but also contains the preprocessed .pckl files and generated .rar spatiotemporal datasets that are otherwise too large to be uploaded here.
 
-> **Skeleton Based Hand Gesture Recognition Using Data Level Fusion** <br>
-> *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* <br>
-> [[IEEE Xplore](https://ieeexplore.ieee.org/document/0000000)] &mdash; [[arXiv](https://ieeexplore.ieee.org/document/0000000)]
+The proposed hand gesture recognition (HGR) framework transforms the dynamic hand gesture recognition task into a static image classification task using data-level fusion and a custom ensemble tuner multi-stream CNN architecture.
+For technical details, please refer to the following publication(s):
+
+> **Development of a Lightweight Real-Time Application for Dynamic Hand Gesture Recognition** <br>
+> *Oluwaleke Umar, Maki Habib* &mdash; [[IEEE ICMA Conference Paper](#)]
+>
+> **Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion** <br>
+> *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* &mdash; [[IGI Book Chapter](https://doi.org/10.4018/978-1-6684-7791-5.ch003)]
 
 A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint.
 The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task on a standard PC while achieving acceptable latency, frames-per-second, and classification accuracy.
@@ -67,7 +71,7 @@ The application underscores the utility of our proposed framework for reducing t
 
 *NOTE: The parameters required to generate the spatiotemporal datasets are set in the `*.hgr-config` files. See `./modules/.configs/all-HGR-ds-schemas.json` for details about the parameters.*
 
-> **Alternatively, the preprocessed .pckl files and generated spatiotemporal datasets can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1LSzM9pTo6FHxqxH8Bt_YTf4Ky2lSf-gQ?usp=sharing) and extracted to the corresponding `./datasets` and `./images_d` directories.**
+> **Alternatively, the preprocessed .pckl files and generated spatiotemporal datasets can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the corresponding `./datasets` and `./images_d` directories.**
 
 
 ## Model Training & Evaluation
@@ -80,12 +84,12 @@ The arguments required for model training are set at the command line. See `./ex
 ```python
 datasetDirectories = {
    "CNR16": "CNR-3d-original-1920px.1080px-[topdown]",
-   "LMDHG13": ...,
-   "FPHA45": ...,
-   "SHREC201714": ...,
-   "SHREC201728": ...,
-   "DHG142814": ...,
-   "DHG142828": ...,
+   "LMDHG13": "LMDHG.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean",
+   "FPHA45": "FPHA.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean",
+   "SHREC201714": "SHREC2017.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean",
+   "SHREC201728": "SHREC2017.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean",
+   "DHG142814": "DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean",
+   "DHG142828": "DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean",
 }
 ```
 
@@ -148,13 +152,14 @@ The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembl
   <img src="./images/hgr_live_demo_video.gif" alt="hgr_live_demo_video">
 </p>
 
-The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + | V | X }` gestures from the DHG1428 dataset in both in both 14G/28G modes, i.e., the gestures can be performed using one finger and the whole hand.
+The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + | V | X }` gestures from the DHG1428 dataset in both 14G/28G modes, i.e., the gestures can be performed using either one finger or the whole hand.
 
 `./images/dhg1428-swipe-gestures.png` shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
 
-> **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1LSzM9pTo6FHxqxH8Bt_YTf4Ky2lSf-gQ?usp=sharing) and extracted to the `./real-time-HGR-application/.sources` directory.**
+> **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the `./real-time-HGR-application/.sources` directory.**
 
-*NOTE: The model required is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 45 in `./real-time-HGR-application/gestureClassInference.py` as required.*
+<!-- *NOTE: The model required is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 45 in `./real-time-HGR-application/gestureClassInference.py` as required.* -->
+<!-- The code has been modified to automatically check for the OS! -->
 
 To launch the real-time HGR application from the terminal, change your directory to `./real-time-HGR-application` and run `python liveStreamHGR.py`.
 When all the required modules have been initialized (takes a little longer the first time), the terminal output should read:
@@ -183,23 +188,25 @@ When all the application modules (with three windows as shown in `./images/initi
 
 If you find this work contained in this repository useful in your research, please cite the following paper:
 
-```
-@ARTICLE{
-  <!-- 0000000, -->
-  author={Yusuf, Oluwaleke and Habib, Maki and Moustafa, Mohamed},
-  journal={IEEE Transactions on Image Processing},
-  title={Skeleton Based Hand Gesture Recognition Using Data Level Fusion},
-  year={2023},
-  <!-- volume={}, -->
-  <!-- number={}, -->
-  <!-- pages={}, -->
-  <!-- doi={} -->
-  }
+```bibtex
+@incollection{
+   yusuf2023transforming,
+   author = {Yusuf, Oluwaleke Umar and Habib, Maki K. and Moustafa, Mohamed N.},
+   title = {Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion: Methods, Framework, and Results},
+   booktitle = {Global Perspectives on Robotics and Autonomous Systems: Development and Applications},
+   editor = {Habib, Maki K.},
+   pages = {39--78},
+   publisher = {IGI Global},
+   year = {2023},
+   doi = {10.4018/978-1-6684-7791-5.ch003},
+   isbn = {9781668477915},
+   eisbn = {9781668477939}
+}
 ```
 
 
 ## Contact
 
-For any questions, feel free to contact: `oluwaleke.umar@aucegypt.edu`
+For any questions, feel free to contact: `oluwaleke(dot)umar(at)aucegypt(dot)edu`
 
 <hr>
