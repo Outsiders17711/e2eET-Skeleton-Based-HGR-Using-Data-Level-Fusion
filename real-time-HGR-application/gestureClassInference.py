@@ -4,6 +4,7 @@
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------
 
+import os
 import json
 import cv2 as cv
 import numpy as np
@@ -41,8 +42,13 @@ Path(args.hgr_archive).mkdir(exist_ok=True)
 # ---------------------------
 from _functionsClasses import attachMetrics, e2eTunerLossWrapper
 
+if os.name == 'nt':  # For Windows OS
+    pkl_file = "./.sources/[bf75]-7G-[cm_td_fa]-Windows.pkl"
+else:  # For Linux OS
+    pkl_file = "./.sources/[bf75]-7G-[cm_td_fa]-Linux.pkl"
+
 attachMetrics(e2eTunerLossWrapper, args.mv_orientations)
-learn = load_learner("./.sources/[bf75]-7G-[cm_td_fa]-Windows.pkl", cpu=args.cpu_mode)
+learn = load_learner(fname=pkl_file, cpu=args.cpu_mode)
 str_dls_vocab = " ".join([f"{i}.{v}" for i, v in enumerate(learn.dls.vocab)])
 print(f"INFO: dls.vocab=[{str_dls_vocab}]")
 
