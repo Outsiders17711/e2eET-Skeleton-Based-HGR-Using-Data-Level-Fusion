@@ -19,11 +19,11 @@ For technical details, please refer to the following publication(s):
 > **Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion** <br>
 > *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* &mdash; [[IGI Book Chapter](https://doi.org/10.4018/978-1-6684-7791-5.ch003)]
 
-A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint.
+A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint as shown in [`./images/application-memory-utilization.png`](./images/application-memory-utilization.png).
 The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task on a standard PC while achieving acceptable latency, frames-per-second, and classification accuracy.
 
 <p align="center">
-  <img src="./images/generalized-e2eet-network-architecture.png" alt="network-architecture" style="width:480px;">
+  <img src="./images/generalized-e2eet-network-architecture-02.png" alt="generalized-e2eet-network-architecture" style="width:560px;">
 </p>
 
 
@@ -154,7 +154,7 @@ The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembl
 
 The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + | V | X }` gestures from the DHG1428 dataset in both 14G/28G modes, i.e., the gestures can be performed using either one finger or the whole hand.
 
-`./images/dhg1428-swipe-gestures.png` shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
+[`./images/dhg1428-swipe-gestures.png`](./images/dhg1428-swipe-gestures.png) shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
 
 > **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the `./real-time-HGR-application/.sources` directory.**
 
@@ -173,20 +173,26 @@ INFO: dls.vocab=[0.Swipe+ 1.SwipeDown 2.SwipeLeft 3.SwipeRight 4.SwipeUp 5.Swipe
 INFO: Initialized <gestureClassInference.py> ...
 ```
 
-When all the application modules (with three windows as shown in `./images/initialized-application-windows.png`) have been initialized:
+<br>
+
+When all the application modules (with three windows as shown in [`./images/initialized-application-windows.png`](./images/initialized-application-windows.png)) have been initialized:
 
 1. raise your hand in view of the camera and wait till a skeleton is overlaid on your hand <br> *(the skeleton overlay shows that the gesture sequence is being recorded)*
-3. perform any of the `Swipe` gestures while maintaining the skeleton overlay <br> *(as shown in `./images/dhg1428-swipe-gestures.png`)*
-4. press the `spacebar` to manually signal end-of-gesture <br> *(this initiates the data-level fusion and gesture class inference)*
-5. you can keep performing gestures or press the `escape` key to terminate the application <br> *(you can also press the `c` key to manually clear any gesture sequences recorded)*
-6. the gesture inferences are displayed in the output GUI and command line <br> *(inferences from the current session are also saved to `./real-time-HGR-application/hgr_output_log.yml`)* <br> *(inferences from previous sessions are appended to `./real-time-HGR-application/hgr_output_log.bak` at the start of a new session)*
+2. perform any of the `Swipe` gestures while maintaining the skeleton overlay <br> *(as shown in [`./images/dhg1428-swipe-gestures.png`](./images/dhg1428-swipe-gestures.png))*
+3. press the `spacebar` to manually signal end-of-gesture <br> *(this initiates the data-level fusion and gesture class inference)*
+4. you can keep performing gestures or press the `escape` key to terminate the application <br> *(you can also press the `c` key to manually clear any gesture sequences recorded)*
+5. the gesture inferences are displayed in the output GUI and command line <br> *(inferences from the current session are also saved to `./real-time-HGR-application/hgr_output_log.yml`)* <br> *(inferences from previous sessions are appended to `./real-time-HGR-application/hgr_output_log.bak` at the start of a new session)*
+
+<p align="center">
+  <img src="./images/live-hgr-application-flowchart.png" alt="live-hgr-application-flowchart">
+</p>
 
 <hr>
 
 
 ## Citation
 
-If you find this work contained in this repository useful in your research, please cite the following paper:
+If you find this work contained in this repository useful in your research, please cite the following publication(s) as relevant:
 
 ```bibtex
 @incollection{
