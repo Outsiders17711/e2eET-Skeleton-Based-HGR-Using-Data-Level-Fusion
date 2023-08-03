@@ -2,7 +2,9 @@
 .vscode
 **/__pycache__
 
-# large files
+# large files [required]
+# download from this drive folder:
+# https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x
 datasets/*.pckl
 images_d/*.rar
 real-time-HGR-application/.sources/*.pkl
