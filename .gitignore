@@ -8,6 +8,7 @@
 datasets/*.pckl
 images_d/*.rar
 real-time-HGR-application/.sources/*.pkl
+ieee-icma-2023-conference/*.mp4
 
 # temporary files
 archive/
