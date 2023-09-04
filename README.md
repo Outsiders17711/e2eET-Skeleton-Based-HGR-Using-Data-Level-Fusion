@@ -14,7 +14,7 @@ The proposed hand gesture recognition (HGR) framework transforms the dynamic han
 For technical details, please refer to the following publication(s):
 
 > **Development of a Lightweight Real-Time Application for Dynamic Hand Gesture Recognition** <br>
-> *Oluwaleke Umar, Maki Habib* &mdash; [[IEEE ICMA Conference Paper](#)]
+> *Oluwaleke Umar, Maki Habib* &mdash; [[IEEE ICMA Conference Paper](https://ieeexplore.ieee.org/document/10216066)]
 >
 > **Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion** <br>
 > *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* &mdash; [[IGI Book Chapter](https://doi.org/10.4018/978-1-6684-7791-5.ch003)]
