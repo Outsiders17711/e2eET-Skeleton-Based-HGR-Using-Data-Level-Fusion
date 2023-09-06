@@ -18,7 +18,7 @@ ap = ArgumentParser(description="e2eET Skeleton Based HGR Using Data-Level Fusio
 
 # --- required arguments
 ap.add_argument("-IG", "--idx_gpu", required=True, type=int, choices=[0, 1, 2, 3])
-ap.add_argument("-nC", "--n_classes", required=True, type=int, choices=[13, 14, 16, 28, 45])
+ap.add_argument("-nC", "--n_classes", required=True, type=int, choices=[8, 13, 14, 16, 28, 45])
 ap.add_argument("-mVOs", "--mv_orientations", required=True, type=str, nargs="+")
 ap.add_argument("-dsN", "--ds_name", required=True, type=str)
 # --- arguments with default options
