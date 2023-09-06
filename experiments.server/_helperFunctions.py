@@ -111,7 +111,6 @@ datasetDirectories = {
     "DHG142814": "DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean",
     "DHG142828": "DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean",
 
-    "SBUKID8": "SBUKId-3D.8G-norm.960px-[allVOs.adaptiveMean]",
     "SBUKID.F018": "SBUKId-3D-CVS.F01.8G-norm.960px-[allVOs.adaptiveMean]",
     "SBUKID.F028": "SBUKId-3D-CVS.F02.8G-norm.960px-[allVOs.adaptiveMean]",
     "SBUKID.F038": "SBUKId-3D-CVS.F03.8G-norm.960px-[allVOs.adaptiveMean]",
