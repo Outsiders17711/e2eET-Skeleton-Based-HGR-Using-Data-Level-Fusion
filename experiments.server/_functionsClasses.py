@@ -202,7 +202,7 @@ def multiOrientationDataLoader(ds_directory, bs, img_size, shuffle=True, return_
 
     ds = multiDHG1428.datasets(ds_directory, verbose=False)
     if return_dls:
-        dls = multiDHG1428.dataloaders(ds_directory, bs=bs, worker_init_fn=e_seed_worker, generator=e_repr_gen, device=defaults.device, shuffle=shuffle)
+        dls = multiDHG1428.dataloaders(ds_directory, bs=bs, worker_init_fn=e_seed_worker, generator=e_repr_gen, device=defaults.device, shuffle=shuffle, num_workers=0)
         # clear_output(wait=False)
         assert dls.c == args.n_classes, ">> ValueError: dls.c != n_classes as specified!!"
 
