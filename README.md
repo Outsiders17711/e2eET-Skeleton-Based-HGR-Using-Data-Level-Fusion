@@ -69,6 +69,15 @@ The application underscores the utility of our proposed framework for reducing t
       - Execute `python modules/create_imgs_v5_DHG1428d_mVOs.py -c "modules/.configs/dhg1428-v5-default.hgr-config""`.
    -  The 14G and 28G spatiotemporal datasets will be saved to `./images_d/DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean` and `./images_d/DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean` respectively.
 
+6. **SBU Kinect Interaction Dataset (SBUKID)**
+   - Download the clean version of the [SBUKID dataset](https://vision.cs.stonybrook.edu/~kiwon/Datasets/SBU_Kinect_Interactions/README.txt) and extract the zipped files to the directory `./datasets/SBUKId/`.
+   - Preprocess the dataset by running the notebook `./modules/parse-data-SBUKId.ipynb`. This will create a new folder `./datasets/SBUKId.txts/` and five files `./datasets/SBUKId_3D_dictCVS_f0{1,2,3,4,5}_s282.pckl`.
+   - To generate the five cross-validation spatiotemporal datasets:
+      - Modify lines 43 and 44 in `./modules/.configs/sbukid-v5-default.hgr-config` to specify the cross-validation fold i.e. `f01` and `F01` for the first cross-validation fold, `f02` and `F02` for the second cross-validation fold, and so on.
+      - Execute `python modules/create_imgs_v5_SBUKId_mVOs.py"` five times with the above modification for the cross-validation fold..
+   - There should be five cross-validation spatiotemporal datasets saved to `./images_d/SBUKId-3D-CVS.F0{1,2,3,4,5}.8G-norm.960px-[allVOs.adaptiveMean]`.
+   - To verify that the cross-validation spatiotemporal datasets have been generated correctly, you can run `./modules/verify-images-SBUKId.ipynb`.
+
 *NOTE: The parameters required to generate the spatiotemporal datasets are set in the `*.hgr-config` files. See `./modules/.configs/all-HGR-ds-schemas.json` for details about the parameters.*
 
 > **Alternatively, the preprocessed .pckl files and generated spatiotemporal datasets can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the corresponding `./datasets` and `./images_d` directories.**
@@ -85,11 +94,10 @@ The arguments required for model training are set at the command line. See `./ex
 datasetDirectories = {
    "CNR16": "CNR-3d-original-1920px.1080px-[topdown]",
    "LMDHG13": "LMDHG.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean",
-   "FPHA45": "FPHA.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean",
-   "SHREC201714": "SHREC2017.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean",
-   "SHREC201728": "SHREC2017.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean",
-   "DHG142814": "DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean",
-   "DHG142828": "DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean",
+      ...
+      ...
+      ...
+   "SBUKID.F058": "SBUKId-3D-CVS.F05.8G-norm.960px-[allVOs.adaptiveMean]",
 }
 ```
 
@@ -143,6 +151,7 @@ The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembl
 | SHREC2017 (28G)   | 95.36 <sub>**↑1.46**</sub>  |
 | DHG1428 (14G)     | 95.83 <sub>**↓0.48**</sub>  |
 | DHG1428 (28G)     | 92.38 <sub>**↓1.67**</sub>  |
+| SBUKID            | 93.96 <sub>**↓4.34**</sub>  |
 <!-- ˄˅↑↓ -->
 
 
@@ -195,8 +204,18 @@ When all the application modules (with three windows as shown in [`./images/init
 If you find this work contained in this repository useful in your research, please cite the following publication(s) as relevant:
 
 ```bibtex
+@INPROCEEDINGS{10216066,
+  author={Yusuf, Oluwaleke and Habib, Maki},
+  booktitle={2023 IEEE International Conference on Mechatronics and Automation (ICMA)},
+  title={Development of a Lightweight Real-Time Application for Dynamic Hand Gesture Recognition},
+  year={2023},
+  pages={543-548},
+  doi={10.1109/ICMA57826.2023.10216066}}
+
+```
+
+```bibtex
 @incollection{
-   yusuf2023transforming,
    author = {Yusuf, Oluwaleke Umar and Habib, Maki K. and Moustafa, Mohamed N.},
    title = {Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion: Methods, Framework, and Results},
    booktitle = {Global Perspectives on Robotics and Autonomous Systems: Development and Applications},
@@ -205,11 +224,8 @@ If you find this work contained in this repository useful in your research, plea
    publisher = {IGI Global},
    year = {2023},
    doi = {10.4018/978-1-6684-7791-5.ch003},
-   isbn = {9781668477915},
-   eisbn = {9781668477939}
 }
 ```
-
 
 ## Contact
 
