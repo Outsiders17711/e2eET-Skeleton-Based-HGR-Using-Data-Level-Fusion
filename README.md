@@ -18,6 +18,9 @@ For technical details, please refer to the following publication(s):
 >
 > **Transforming Hand Gesture Recognition Into Image Classification Using Data Level Fusion** <br>
 > *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* &mdash; [[IGI Book Chapter](https://doi.org/10.4018/978-1-6684-7791-5.ch003)]
+>
+> **Real-Time Hand Gesture Recognition: Integrating Skeleton-Based Data Fusion and Multi-Stream CNN** <br>
+> *Oluwaleke Umar, Maki Habib, Mohamed Moustafa* &mdash; [[ArXiv Preprint](https://arxiv.org/abs/2406.15003)]
 
 A real-time HGR application developed based on our framework only requires video streams from any standard inbuilt PC webcam and operates with a minimal CPU and RAM footprint as shown in [`./images/application-memory-utilization.png`](./images/application-memory-utilization.png).
 The application underscores the utility of our proposed framework for reducing the hardware requirements and computational complexity of the HGR task on a standard PC while achieving acceptable latency, frames-per-second, and classification accuracy.
@@ -145,12 +148,12 @@ The TensorBoard event logs can be found in `./runs.server/allDatasets-e2eEnsembl
 | Benchmark Dataset | Classification Accuracy (%) |
 | ----------------- | :-------------------------: |
 | CNR               | 97.05 <sub>**↓1.73**</sub>  |
-| LMDHG             | 98.97 <sub>**↑6.86**</sub>  |
+| LMDHG             | 98.97 <sub>**↑5.16**</sub>  |
 | FPHA              | 91.83 <sub>**↓4.10**</sub>  |
-| SHREC2017 (14G)   | 97.86 <sub>**↑0.86**</sub>  |
-| SHREC2017 (28G)   | 95.36 <sub>**↑1.46**</sub>  |
-| DHG1428 (14G)     | 95.83 <sub>**↓0.48**</sub>  |
-| DHG1428 (28G)     | 92.38 <sub>**↓1.67**</sub>  |
+| SHREC2017 (14G)   | 97.86 <sub>**↑0.24**</sub>  |
+| SHREC2017 (28G)   | 95.36 <sub>**↓0.47**</sub>  |
+| DHG1428 (14G)     | 95.83 <sub>**↓2.27**</sub>  |
+| DHG1428 (28G)     | 92.38 <sub>**↓1.82**</sub>  |
 | SBUKID            | 93.96 <sub>**↓4.34**</sub>  |
 <!-- ˄˅↑↓ -->
 
