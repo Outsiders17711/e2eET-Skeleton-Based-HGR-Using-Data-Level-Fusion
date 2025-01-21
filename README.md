@@ -5,6 +5,10 @@
 <img src="https://badges.strrl.dev/created/Outsiders17711/e2eET-Skeleton-Based-HGR-Using-Data-Level-Fusion?style=for-the-badge&logo=github" alt="https://github.com/Outsiders17711" />&nbsp;
 </p>
 
+# 📦 Archived: No Longer Maintained
+
+This repository has been archived and is no longer maintained. It is now read-only. Feel free to fork or use it as needed.
+
 # e2eET Skeleton Based HGR Using Data-Level Fusion
 
 This repository holds the PyTorch/FastAI implementation for **"Skeleton Based Hand Gesture Recognition Using Data Level Fusion"**.
@@ -229,9 +233,5 @@ If you find this work contained in this repository useful in your research, plea
    doi = {10.4018/978-1-6684-7791-5.ch003},
 }
 ```
-
-## Contact
-
-For any questions, feel free to contact: `oluwaleke(dot)umar(at)aucegypt(dot)edu`
 
 <hr>
