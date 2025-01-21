@@ -3,6 +3,7 @@
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
 # pyright: reportOptionalMemberAccess=false
+# type:ignore
 # -----------------------------------------------
 
 import sys
@@ -289,6 +290,8 @@ class loadConfigArguments:
         self.hgr_log = Path(config["hgr_log"])
         self.gs_images_directory = Path(config["images_directory"])
         self.gs_data_directory = Path(config["data_directory"])
+        self.gs_images_directory.mkdir(exist_ok=True)
+        self.gs_data_directory.mkdir(exist_ok=True)
         for gs_tag in self.gs_data_directory.glob("*"):
             # gs_tag.replace(f"{self.gs_images_directory}/{gs_tag.name}")
             pass

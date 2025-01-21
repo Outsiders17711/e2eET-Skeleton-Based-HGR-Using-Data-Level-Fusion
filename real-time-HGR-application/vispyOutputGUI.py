@@ -3,6 +3,7 @@
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportWildcardImportFromLibrary=false
 # pyright: reportOptionalMemberAccess=false
+# type:ignore
 # -----------------------------------------------
 
 import re

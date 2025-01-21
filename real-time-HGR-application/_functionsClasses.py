@@ -2,6 +2,7 @@
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportWildcardImportFromLibrary=false
+# type:ignore
 # -----------------------------------------------
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -536,8 +537,12 @@ def _create_mvo_metric(idx:int):
 def attachMetrics(lossWrapper, mVOs, rename=False):
     for _idx, _vo in enumerate(mVOs):
         _vo = _vo.title().replace("-", "")
-        setattr(lossWrapper, f"accuracyMultiVOs_{_idx}", _create_mvo_metric(idx=_idx))
-        if rename: exec(f"lossWrapper.accuracyMultiVOs_{_idx}.__name__ = 'accuracy{_vo}'")
+        _func = _create_mvo_metric(idx = _idx)
+        setattr(lossWrapper, f"accuracyMultiVOs_{_idx}", _func)
+        if rename: 
+            exec(f"lossWrapper.accuracyMultiVOs_{_idx}.__name__ = 'accuracy{_vo}'")
+            setattr(lossWrapper, f"accuracy{_vo}", _func)
+
 
 def returnMetrics(lossFunction, mVOs, verbose=False):
     metrics = []

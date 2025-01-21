@@ -11,5 +11,13 @@ real-time-HGR-application/.sources/*.pkl
 ieee-icma-2023-conference/*.mp4
 
 # temporary files
+**/*tmp.*
+**/*bak.*
+tmp.*
+
 archive/
 sync.ffs_db
+ruff.toml
+real-time-HGR-application/.archive/
+real-time-HGR-application/data-dlf/
+real-time-HGR-application/data-gci/

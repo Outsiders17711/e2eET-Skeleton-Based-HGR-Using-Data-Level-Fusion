@@ -2,6 +2,7 @@
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportWildcardImportFromLibrary=false
+# type:ignore
 # -----------------------------------------------
 """
 Hand Tracking Module
