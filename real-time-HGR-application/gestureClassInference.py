@@ -35,8 +35,14 @@ class Arguments:
 
 args = Arguments()
 deets = multiDetailsParser()
+
+if not args.cpu_mode and not torch.cuda.is_available():
+    print("WARNING: CUDA is unavailable; falling back to CPU.")
+    args.cpu_mode = True
+
 defaults.device = torch.device("cpu" if args.cpu_mode else "cuda:0")
 Path(args.hgr_archive).mkdir(exist_ok=True)
+Path(args.images_directory).mkdir(exist_ok=True)
 
 
 # [init.learner.object]
@@ -52,6 +58,7 @@ else:  # For Linux OS
 
 attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
 learn = load_learner(fname=pkl_file, cpu=args.cpu_mode)
+learn.dls.device = defaults.device
 str_dls_vocab = " ".join([f"{i}.{v}" for i, v in enumerate(learn.dls.vocab)])
 print(f"INFO: dls.vocab=[{str_dls_vocab}]")
 

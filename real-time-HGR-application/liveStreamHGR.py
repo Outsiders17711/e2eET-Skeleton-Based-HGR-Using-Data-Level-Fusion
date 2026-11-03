@@ -5,21 +5,22 @@
 # pyright: reportOptionalMemberAccess=false
 # -----------------------------------------------
 
-import re
 import json
-import time
+import os
+import re
 import subprocess
-from pathlib import Path
+import sys
+import time
 from collections import deque
 from datetime import datetime
-from itertools import starmap, repeat
+from itertools import repeat, starmap
+from pathlib import Path
 
 import cv2 as cv
-import numpy as np
 import matplotlib.colors as mc
-from _mediapipePoseEstimation import HandDetector
+import numpy as np
 from _helperFunctions import hgrLogger
-
+from _mediapipePoseEstimation import HandDetector
 
 # [GLOBALS]__________________________________________________________
 cfg = json.load(open("./allConfigs.jsonc"))
@@ -73,7 +74,11 @@ def gs_logger():
     n_skeletons = min(len(gs_deque), gs_length)
     gs = np.array(list(starmap(gs_deque.popleft, repeat((), n_skeletons))))
 
-    np.save(f"{gs_tag}/gs_sequence", gs)
+    # avoid race conditions in dataLevelFusion.py before the file is fully written
+    f_gss = gs_tag / "gs_sequence.npy"
+    f_tmp = gs_tag / ".gs_sequence.tmp.npy"
+    np.save(f_tmp, gs)
+    f_tmp.replace(f_gss)
     hgrLogger(f"{len(gs_deque):02} | {gs.shape=}", log=hgr_log)
 
 
@@ -83,7 +88,8 @@ def live_stream_hgr(nD):
     assert nD in ["2D", "3D"], "ValueError@ nD parameter"
 
     # --- init camera window, set frame dimensions, and keep on top
-    cap = cv.VideoCapture(0, cv.CAP_DSHOW)
+    camera_backend = cv.CAP_DSHOW if os.name == "nt" else cv.CAP_V4L2
+    cap = cv.VideoCapture(0, camera_backend)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cfg["FRAME_SIZE"])
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, (cfg["FRAME_SIZE"] * 9 / 16))
 
@@ -142,9 +148,9 @@ def live_stream_hgr(nD):
 
 # [>>>>>]____________________________________________________________
 if __name__ == "__main__":
-    gesture_inference = subprocess.Popen(args="python ./gestureClassInference.py")
-    data_level_fusion = subprocess.Popen(args="python ./dataLevelFusion.py")
-    vispy_output_gui = subprocess.Popen(args="python ./vispyOutputGUI.py")
+    gesture_inference = subprocess.Popen(args=[sys.executable, "./gestureClassInference.py"])
+    data_level_fusion = subprocess.Popen(args=[sys.executable, "./dataLevelFusion.py"])
+    vispy_output_gui = subprocess.Popen(args=[sys.executable, "./vispyOutputGUI.py"])
 
     try:
         live_stream_hgr(nD="3d")

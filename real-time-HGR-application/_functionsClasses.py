@@ -443,9 +443,9 @@ class end2endTunerModel(Module):
         self.tuner_img_sz = tuner_img_sz
         self.debug = debug
 
-        self.multiVOsBody = create_body(arch=archMultiVOs, cut=None)
+        self.multiVOsBody = create_body(archMultiVOs(pretrained=True), cut=None)
         self.multiVOsHead = create_head(nf=num_features_model(self.multiVOsBody), n_out=args.n_classes)
-        self.tunerBody = create_body(arch=archTuner, cut=None)
+        self.tunerBody = create_body(archTuner(pretrained=True), cut=None)
         self.tunerHead = create_head(nf=num_features_model(self.tunerBody), n_out=args.n_classes)
 
         self.item_tfms = [Resize(size=tuner_img_sz, method=ResizeMethod.Squish), ToTensor()]

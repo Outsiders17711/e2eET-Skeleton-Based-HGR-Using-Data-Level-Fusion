@@ -1,23 +1,26 @@
-# usual excludes
+# local environment and tooling
 .vscode
 **/__pycache__
+.venv/
+.ruff_cache/
 
 # large files [required]
 # download from this drive folder:
 # https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x
 datasets/*.pckl
 images_d/*.rar
-real-time-HGR-application/.sources/*.pkl
 ieee-icma-2023-conference/*.mp4
+real-time-HGR-application/.sources/*.pkl
 
-# temporary files
-**/*tmp.*
-**/*bak.*
-tmp.*
+# local archives and temporary files
+**/*tmp*
+**/*bak*
+archive*/
 
-archive/
 sync.ffs_db
 ruff.toml
+
+real-time-HGR-application/hgr_output_log.*
 real-time-HGR-application/.archive/
 real-time-HGR-application/data-dlf/
 real-time-HGR-application/data-gci/

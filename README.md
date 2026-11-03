@@ -36,12 +36,17 @@ The application underscores the utility of our proposed framework for reducing t
 
 ## Prerequisites
 
-- Python == 3.8.5
-- Vispy == 0.9.3
-- PyTorch == 1.8.1+cu102
-- FastAI == 2.5.3
-- MediaPipe == 0.8.7.1
-- Other dependencies described in requirements.txt
+- Python 3.12
+- [uv](https://docs.astral.sh/uv/)
+- An NVIDIA GPU with a driver supporting CUDA 12.4 for model training (the real-time demo can run on CPU or GPU)
+
+Create the environment from the repository root:
+
+```bash
+uv sync
+```
+
+The dependencies are declared in `pyproject.toml` and pinned in `uv.lock`. `uv run` finds the root project from any subdirectory.
 
 
 ## Data-Level Fusion: Processing Benchmark Datasets
@@ -53,19 +58,19 @@ The application underscores the utility of our proposed framework for reducing t
 2. **Leap Motion Dynamic Hand Gesture (LMDHG) Database**
    - Download the [LMDHG dataset](https://www-intuidoc.irisa.fr/en/english-leap-motion-dynamic-hand-gesture-lmdhg-database/) and extract to the directory `./datasets/LMDHG/`.
    - Preprocess the dataset by running the notebook `./modules/parse-data-LMDHGd.ipynb`. This will create a file `./datasets/LMDHG_3d_dictPaperSplit_l750_s609.pckl`.
-   - Generate the spatiotemporal dataset using `python modules/create_imgs_v5_LMDHGd_mVOs.py -c "modules/.configs/lmdhg-v5-default.hgr-config"`. The spatiotemporal dataset will be saved to `./images_d/LMDHG.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean`.
+   - Generate the spatiotemporal dataset using `uv run python modules/create_imgs_v5_LMDHGd_mVOs.py -c "modules/.configs/lmdhg-v5-default.hgr-config"`. The spatiotemporal dataset will be saved to `./images_d/LMDHG.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean`.
 
 3. **First-Person Hand Action (FPHA) Benchmark**
    - Download the [FPHA dataset](https://guiggh.github.io/publications/first-person-hands/) and extract to the directory `./datasets/FPHA/`.
    - Preprocess the dataset by running the notebook `./modules/parse-data-FPHAd.ipynb`. This will create a file `./datasets/FPHA_3d_dictPaperSplit_l250_s1175.pckl`.
-   - Generate the spatiotemporal dataset using `python modules/create_imgs_v5_FPHAd_mVOs.py -c "modules/.configs/fpha-v5-default.hgr-config"`. The spatiotemporal dataset will be saved to `./images_d/FPHA.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean`.
+   - Generate the spatiotemporal dataset using `uv run python modules/create_imgs_v5_FPHAd_mVOs.py -c "modules/.configs/fpha-v5-default.hgr-config"`. The spatiotemporal dataset will be saved to `./images_d/FPHA.mVOs-dictPaperSplit-3d.V1-noisy(raw).960px-[allVOs].adaptive-mean`.
 
 4. **3D Hand Gesture Recognition Using a Depth and Skeleton Dataset (SHREC2017)**
    - Download the [SHREC2017 dataset](http://www-rech.telecom-lille.fr/shrec2017-hand/) and extract to the directory `./datasets/SHREC2017/`.
    - Preprocess the dataset by running the notebook `./modules/parse-data-SHREC2017d.ipynb`. This will create a file `./datasets/SHREC2017_3d_dictTVS_l250_s2800.pckl`.
    - To generate the 14G and 28G spatiotemporal datasets:
       - Modify line 23 in `./modules/.configs/shrec2017-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
-      - Execute `python modules/create_imgs_v5_SHREC2017d_mVOs.py -c "modules/.configs/shrec2017-v5-default.hgr-config"`.
+      - Execute `uv run python modules/create_imgs_v5_SHREC2017d_mVOs.py -c "modules/.configs/shrec2017-v5-default.hgr-config"`.
    -  The 14G and 28G spatiotemporal datasets will be saved to `./images_d/SHREC2017.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean` and `./images_d/SHREC2017.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean` respectively.
 
 5. **Dynamic Hand Gesture 14/28 (DHG1428) Dataset**
@@ -73,7 +78,7 @@ The application underscores the utility of our proposed framework for reducing t
    - Preprocess the dataset by running the notebook `./modules/parse-data-DHG1428d.ipynb`. This will create a file `./datasets/DHG1428_3d_dictTVS_l250_s2800.pckl`.
    - To generate the 14G and 28G spatiotemporal datasets:
       - Modify line 23 in `./modules/.configs/dhg1428-v5-default.hgr-config` such that `"n_dataset_classes": 14,` for 14G evaluation mode or `"n_dataset_classes": 28,` for 28G evaluation mode.
-      - Execute `python modules/create_imgs_v5_DHG1428d_mVOs.py -c "modules/.configs/dhg1428-v5-default.hgr-config""`.
+      - Execute `uv run python modules/create_imgs_v5_DHG1428d_mVOs.py -c "modules/.configs/dhg1428-v5-default.hgr-config""`.
    -  The 14G and 28G spatiotemporal datasets will be saved to `./images_d/DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean` and `./images_d/DHG1428.mVOs-3d.28g-noisy(raw).960px-[allVOs].adaptive-mean` respectively.
 
 6. **SBU Kinect Interaction Dataset (SBUKID)**
@@ -81,7 +86,7 @@ The application underscores the utility of our proposed framework for reducing t
    - Preprocess the dataset by running the notebook `./modules/parse-data-SBUKId.ipynb`. This will create a new folder `./datasets/SBUKId.txts/` and five files `./datasets/SBUKId_3D_dictCVS_f0{1,2,3,4,5}_s282.pckl`.
    - To generate the five cross-validation spatiotemporal datasets:
       - Modify lines 43 and 44 in `./modules/.configs/sbukid-v5-default.hgr-config` to specify the cross-validation fold i.e. `f01` and `F01` for the first cross-validation fold, `f02` and `F02` for the second cross-validation fold, and so on.
-      - Execute `python modules/create_imgs_v5_SBUKId_mVOs.py"` five times with the above modification for the cross-validation fold..
+      - Execute `uv run python modules/create_imgs_v5_SBUKId_mVOs.py"` five times with the above modification for the cross-validation fold..
    - There should be five cross-validation spatiotemporal datasets saved to `./images_d/SBUKId-3D-CVS.F0{1,2,3,4,5}.8G-norm.960px-[allVOs.adaptiveMean]`.
    - To verify that the cross-validation spatiotemporal datasets have been generated correctly, you can run `./modules/verify-images-SBUKId.ipynb`.
 
@@ -93,7 +98,7 @@ The application underscores the utility of our proposed framework for reducing t
 ## Model Training & Evaluation
 
 The directory `./experiments.server` contains the training and evaluation code for all benchmark datasets. The directory `./runs.server` contains the relevant TensorBoard event logs and model graphs.
-The arguments required for model training are set at the command line. See `./experiments.server/_trainingParameters` for details about the parameters.
+The arguments required for model training are set at the command line. See `./experiments.server/_trainingParameters` for details about the parameters. Run the training commands from `./experiments.server`.
 
 *NOTE: Before training, ensure that the `datasetDirectories` object in `./experiments.server/_helperFunctions.py` points to the correct directories for the spatiotemporal datasets generated above and located at `./images_d` such that:*
 
@@ -118,13 +123,13 @@ The results of any experiments run will automatically be appended to that file. 
 **EX1 &ndash;**
 1SA experiment on `DHG1428` with `14` classes using `top-down` view orientation running on GPU `0`:
 ```bash
-python sVO.mVO.Checkpoints.py -IG 0 -nC 14 -mVOs top-down -dsN DHG1428
+uv run python sVO.mVO.Checkpoints.py -IG 0 -nC 14 -mVOs top-down -dsN DHG1428
 ```
 
 **EX2 &ndash;**
 2SA experiment on `DHG1428` with `28` classes using `custom` and `side-left` view orientations (order-sensitive) running on GPU `1`:
 ```bash
-python sVO.mVO.Checkpoints.py -IG 1 -nC 28 -mVOs custom side-left -dsN DHG1428
+uv run python sVO.mVO.Checkpoints.py -IG 1 -nC 28 -mVOs custom side-left -dsN DHG1428
 ```
 
 ### Multi-Stream Ensemble Tuner Experiments
@@ -137,7 +142,7 @@ The results of any experiments run will automatically be appended to that file. 
 **EX &ndash;**
 3SA experiment on `DHG1428` with `14` classes using `top-down`, `custom` and `front-away` view orientation running on GPU `0`:
 ```bash
-python mVO.e2eEnsembleTuning.py -IG 0 -nC 14 -mVOs top-down custom front-away -dsN DHG1428 -IISE 0 -ISIS 0
+uv run python mVO.e2eEnsembleTuning.py -IG 0 -nC 14 -mVOs top-down custom front-away -dsN DHG1428 -IISE 0 -ISIS 0
 ```
 
 ### Final Evaluation on Benchmark Datasets
@@ -177,10 +182,12 @@ The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + 
 <!-- *NOTE: The model required is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 45 in `./real-time-HGR-application/gestureClassInference.py` as required.* -->
 <!-- The code has been modified to automatically check for the OS! -->
 
-To launch the real-time HGR application from the terminal, change your directory to `./real-time-HGR-application` and run `python liveStreamHGR.py`.
+To launch the real-time HGR application from the terminal, change your directory to `./real-time-HGR-application` and run `uv run python liveStreamHGR.py`. The demo runs on CPU when `cpu_mode` is true in `./real-time-HGR-application/allConfigs.jsonc`, and uses the GPU when it is false. If CUDA is unavailable, it falls back to CPU automatically.
+
 When all the required modules have been initialized (takes a little longer the first time), the terminal output should read:
-```batch
-(hlu) H:\path\to\e2eET-Skeleton-Based-HGR-Using-Data-Level-Fusion\real-time-HGR-application>python liveStreamHGR.py
+```bash
+cd real-time-HGR-application
+uv run python liveStreamHGR.py
 INFO: Initialized <vispyOutputGUI.py> ...
 INFO: Initialized <dataLevelFusion.py> ...
 INFO: Initialized <liveStreamHGR.py> ...
@@ -191,13 +198,16 @@ INFO: Initialized <gestureClassInference.py> ...
 
 <br>
 
-When all the application modules (with three windows as shown in [`./images/initialized-application-windows.png`](./images/initialized-application-windows.png)) have been initialized:
+When all the application modules (with three windows as shown in [`./images/initialized-application-windows.png`](./images/initialized-application-windows.png)) have been initialized, keep the camera window focused and:
 
-1. raise your hand in view of the camera and wait till a skeleton is overlaid on your hand <br> *(the skeleton overlay shows that the gesture sequence is being recorded)*
+1. raise your hand in view of the camera and wait until a skeleton is overlaid on your hand <br> *(the skeleton overlay shows that the gesture sequence is being recorded)*
 2. perform any of the `Swipe` gestures while maintaining the skeleton overlay <br> *(as shown in [`./images/dhg1428-swipe-gestures.png`](./images/dhg1428-swipe-gestures.png))*
-3. press the `spacebar` to manually signal end-of-gesture <br> *(this initiates the data-level fusion and gesture class inference)*
-4. you can keep performing gestures or press the `escape` key to terminate the application <br> *(you can also press the `c` key to manually clear any gesture sequences recorded)*
-5. the gesture inferences are displayed in the output GUI and command line <br> *(inferences from the current session are also saved to `./real-time-HGR-application/hgr_output_log.yml`)* <br> *(inferences from previous sessions are appended to `./real-time-HGR-application/hgr_output_log.bak` at the start of a new session)*
+3. press `Space` to end the current gesture sequence and trigger data-level fusion and classification
+4. the gesture inferences are displayed in the output GUI and command line <br> *(inferences from the current session are also saved to `./real-time-HGR-application/hgr_output_log.yml`)* <br> *(inferences from previous sessions are appended to `./real-time-HGR-application/hgr_output_log.bak` at the start of a new session)*
+5. press `C` to clear the current gesture sequence without classifying it
+6. press `Esc` to exit the application and terminate its child processes
+
+When `debug_mode` is enabled in `./real-time-HGR-application/allConfigs.jsonc`, the fusion window additionally supports `Left`/`Right` to change view orientation, `Space` to pause or resume the visualisation, and `C` to print camera details. The output window supports `C` for scene details and `Esc` to quit.
 
 <p align="center">
   <img src="./images/live-hgr-application-flowchart.png" alt="live-hgr-application-flowchart">

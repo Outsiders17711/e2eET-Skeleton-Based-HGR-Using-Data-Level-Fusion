@@ -75,7 +75,7 @@ from _functionsClasses import *
 # ---------------------------
 dls = multiOrientationDataLoader(ds_directory, bs=args.bs, img_size=args.init_img_sz, preview=True)
 
-encoder = create_body(BaseArchitectures[args.architecture], cut=None)
+encoder = create_body(BaseArchitectures[args.architecture](pretrained=True), cut=None)
 nf = num_features_model(encoder)
 if args.ftr_fusion == "cat": nf *= len(args.mv_orientations)
 head = create_head(nf=nf, n_out=args.n_classes, lin_ftrs=[512])

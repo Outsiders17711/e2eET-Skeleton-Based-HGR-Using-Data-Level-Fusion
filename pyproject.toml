@@ -1,0 +1,46 @@
+[project]
+name = "e2eet-skeleton-hgr"
+version = "0.1.0"
+description = "e2eET skeleton-based dynamic hand gesture recognition using data-level fusion"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # mediapipe 0.10.21 is the last release with the legacy mp.solutions API.
+    "mediapipe==0.10.21",
+    # mediapipe requires numpy<2; opencv 4.12+ requires numpy>=2.
+    "numpy==1.26.4",
+    "opencv-contrib-python==4.11.0.86",
+    # fastai 2.7.19 pins torch<2.7; newer fastai releases remove typedispatch.
+    "fastai==2.7.19",
+    # pypi torch 2.6.0 and torchvision 0.21.0 are the cuda 12.4 builds.
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "scipy==1.17.1",
+    "matplotlib==3.10.9",
+    "vispy==0.17.0",
+    "PyQt5==5.15.11",
+    "tensorboard==2.19.0",
+    "ipython==8.30.0",
+    "scikit-learn==1.9.1",
+    "pillow==13.0.0",
+    "pytorchcv==0.0.67",
+    "geffnet==1.0.2",
+    "playsound==1.2.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 105
+
+[tool.ruff.lint]
+select = ["F", "I"]
+ignore = ["F401", "F403", "F405"]
+
+[tool.pyright]
+include = ["real-time-HGR-application", "experiments.server", "modules"]
+exclude = ["**/__pycache__", "archive", "archive031126"]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"

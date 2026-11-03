@@ -393,7 +393,8 @@ def main():
         cfg.init_gesture_sequence(data_files.pop())
 
     else:
-        data_files = deque(sorted(cfg.gs_data_directory.iterdir(), reverse=True))
+        data_files = (f for f in cfg.gs_data_directory.iterdir() if (f / "gs_sequence.npy").is_file())
+        data_files = deque(sorted(data_files, reverse=True))
         l_data_files = len(data_files)
 
         if l_data_files:
