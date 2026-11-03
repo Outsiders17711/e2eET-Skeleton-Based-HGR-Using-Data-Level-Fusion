@@ -10,17 +10,13 @@
 datasets/*.pckl
 images_d/*.rar
 ieee-icma-2023-conference/*.mp4
-real-time-HGR-application/.sources/*.pkl
+real-time-HGR-application/models/*.pkl
 
 # local archives and temporary files
 **/*tmp*
 **/*bak*
 archive*/
+real-time-HGR-application/outputs/
 
 sync.ffs_db
 ruff.toml
-
-real-time-HGR-application/hgr_output_log.*
-real-time-HGR-application/.archive/
-real-time-HGR-application/data-dlf/
-real-time-HGR-application/data-gci/

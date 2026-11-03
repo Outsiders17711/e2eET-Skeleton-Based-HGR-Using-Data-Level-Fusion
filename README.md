@@ -177,10 +177,18 @@ The real-time application recognizes the `Swipe- { Up | Down | Right | Left | + 
 
 [`./images/dhg1428-swipe-gestures.png`](./images/dhg1428-swipe-gestures.png) shows the way the gestures are to be performed &ndash; same as in the original dataset. **[`./images/hgr_live_demo_video.mp4`](./images/hgr_live_demo_video.mp4) shows all the `Swipe` gestures being performed and recognized by the application in one take.**
 
-> **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the `./real-time-HGR-application/.sources` directory.**
+> **The real-time application REQUIRES trained (.pkl) models which can be downloaded from this [drive folder](https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x) and extracted to the `./real-time-HGR-application/models` directory.**
 
-<!-- *NOTE: The model required is OS-specific. Download either `[bf75]-7G-[cm_td_fa]-Windows.pkl` or `[bf75]-7G-[cm_td_fa]-Linux.pkl` from the drive folder and modify line 45 in `./real-time-HGR-application/gestureClassInference.py` as required.* -->
-<!-- The code has been modified to automatically check for the OS! -->
+The demo is organized as follows:
+
+```text
+real-time-HGR-application/
+├── allConfigs.jsonc
+├── liveStreamHGR.py
+├── models/          # trained .pkl models, ignored by Git
+├── outputs/         # generated sequences, logs and archives, ignored by Git
+└── src/             # demo modules
+```
 
 To launch the real-time HGR application from the terminal, change your directory to `./real-time-HGR-application` and run `uv run python liveStreamHGR.py`. The demo runs on CPU when `cpu_mode` is true in `./real-time-HGR-application/allConfigs.jsonc`, and uses the GPU when it is false. If CUDA is unavailable, it falls back to CPU automatically.
 
@@ -203,7 +211,7 @@ When all the application modules (with three windows as shown in [`./images/init
 1. raise your hand in view of the camera and wait until a skeleton is overlaid on your hand <br> *(the skeleton overlay shows that the gesture sequence is being recorded)*
 2. perform any of the `Swipe` gestures while maintaining the skeleton overlay <br> *(as shown in [`./images/dhg1428-swipe-gestures.png`](./images/dhg1428-swipe-gestures.png))*
 3. press `Space` to end the current gesture sequence and trigger data-level fusion and classification
-4. the gesture inferences are displayed in the output GUI and command line <br> *(inferences from the current session are also saved to `./real-time-HGR-application/hgr_output_log.yml`)* <br> *(inferences from previous sessions are appended to `./real-time-HGR-application/hgr_output_log.bak` at the start of a new session)*
+4. the gesture inferences are displayed in the output GUI and command line <br> *(all inferences are appended to `./real-time-HGR-application/outputs/history.log`)*
 5. press `C` to clear the current gesture sequence without classifying it
 6. press `Esc` to exit the application and terminate its child processes
 

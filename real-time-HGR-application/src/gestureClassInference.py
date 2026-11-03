@@ -5,6 +5,7 @@
 # ---------------------------------------------------------
 
 import os
+import sys
 import json
 import pathlib
 import cv2 as cv
@@ -12,7 +13,7 @@ import numpy as np
 from fastai.vision.all import *
 from datetime import datetime, timedelta
 
-from _helperFunctions import multiDetailsParser, hgrLogger
+from src.helperFunctions import multiDetailsParser, hgrLogger
 
 
 # [init.args.deets.defaults]
@@ -41,20 +42,24 @@ if not args.cpu_mode and not torch.cuda.is_available():
     args.cpu_mode = True
 
 defaults.device = torch.device("cpu" if args.cpu_mode else "cuda:0")
-Path(args.hgr_archive).mkdir(exist_ok=True)
-Path(args.images_directory).mkdir(exist_ok=True)
+Path(args.hgr_archive).mkdir(parents=True, exist_ok=True)
+Path(args.images_directory).mkdir(parents=True, exist_ok=True)
 
 
 # [init.learner.object]
 # ---------------------------
-from _functionsClasses import attachMetrics, e2eTunerLossWrapper
+import src.functionsClasses as functions_classes
+from src.functionsClasses import attachMetrics, e2eTunerLossWrapper
+
+# the exported learner still references the original module name
+sys.modules["_functionsClasses"] = functions_classes
 
 if os.name == 'nt':  # For Windows OS
     pathlib.PosixPath = pathlib.WindowsPath
-    pkl_file = "./.sources/[bf75]-7G-[cm_td_fa]-Windows.pkl"
+    pkl_file = "./models/[bf75]-7G-[cm_td_fa]-Windows.pkl"
 else:  # For Linux OS
     pathlib.WindowsPath = pathlib.PosixPath
-    pkl_file = "./.sources/[bf75]-7G-[cm_td_fa]-Linux.pkl"
+    pkl_file = "./models/[bf75]-7G-[cm_td_fa]-Linux.pkl"
 
 attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
 learn = load_learner(fname=pkl_file, cpu=args.cpu_mode)

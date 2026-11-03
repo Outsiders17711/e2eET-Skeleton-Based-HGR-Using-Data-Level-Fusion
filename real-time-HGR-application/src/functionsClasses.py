@@ -23,7 +23,7 @@ from torch.utils.tensorboard.writer import SummaryWriter
 from IPython.display import clear_output
 # ---
 from __main__ import args, deets
-from _helperFunctions import *
+from src.helperFunctions import *
 
 
 __all__ = [
@@ -242,7 +242,7 @@ def Cleaner(target=None):
 
     if target: _cleanup(target)
 
-    for _f in Path(f"./.sources").iterdir():
+    for _f in Path(f"./models").iterdir():
         if _f.is_dir() and not(list(_f.iterdir())) and not(_f.name.startswith("DHG1428")):
             _cleanup(_f)
 # -----------------------------------------------

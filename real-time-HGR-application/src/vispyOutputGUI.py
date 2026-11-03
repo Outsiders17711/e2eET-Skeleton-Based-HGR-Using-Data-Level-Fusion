@@ -6,7 +6,6 @@
 # type:ignore
 # -----------------------------------------------
 
-import re
 import json
 import sys
 from pathlib import Path
@@ -48,7 +47,7 @@ def update(null):
     global output
 
     with open(cfg.hgr_log) as f:
-        output.text = "\n".join(f.readlines())
+        output.text = "\n".join(f.readlines()[-24:])
 
 
 def run_app(app):
@@ -56,30 +55,10 @@ def run_app(app):
         app.run()
 
 
-def _backup_v1():
-    if cfg.hgr_log.exists():
-        with open(cfg.hgr_log, "r") as f:
-            _backup = len(f.readlines()) >= 24  # >= three gs data (8 lines each)
-
-        if _backup:
-            tag = re.sub("[-:]", "", str(datetime.now())[:-7]).replace(" ", ".")
-            cfg.hgr_log.replace(f"{cfg.hgr_archive}/{cfg.hgr_log.stem}.{tag}.bak")
-
-    open(cfg.hgr_log, "w")
-
-
-def backup():
-    if cfg.hgr_log.exists():
-        with open(cfg.hgr_log, "r") as f:
-            _contents = f.readlines()
-            _backup = len(_contents) >= 24  # >= three gs data (8 lines each)
-
-        if _backup:
-            with open(str(cfg.hgr_log).replace("yml", "bak"), "a") as f:
-                f.write(f"{'*'*75}\n\n\n")
-                f.writelines(_contents)
-
-    with open(cfg.hgr_log, "w") as f:
+def start_log():
+    cfg.hgr_log.parent.mkdir(parents=True, exist_ok=True)
+    with open(cfg.hgr_log, "a") as f:
+        f.write(f"{'*'*75}\n\n\n")
         f.write(f"--- e2eET HGR Log @ {str(datetime.now())} ".ljust(75, "-"))
         f.write("\n")
 
@@ -119,11 +98,12 @@ class loadConfigArguments:
         self.hgr_log = Path(config["hgr_log"])
 
         self.fps = 5
-        self.hgr_archive.mkdir(exist_ok=True)
+        self.hgr_archive.mkdir(parents=True, exist_ok=True)
+        self.hgr_log.parent.mkdir(parents=True, exist_ok=True)
 
 
 def main():
-    backup()
+    start_log()
     timer = app.Timer(interval=(1.0 / cfg.fps), connect=update, start=True)
     print("INFO: Initialized <vispyOutputGUI.py> ...")
 

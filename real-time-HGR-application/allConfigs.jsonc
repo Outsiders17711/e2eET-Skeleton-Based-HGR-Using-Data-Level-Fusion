@@ -46,10 +46,10 @@
     "view_orientation": ["custom", "top-down", "front-away"],
 
 
-    "data_directory": "./data-dlf/",
-    "images_directory": "./data-gci/",
-    "hgr_archive": "./.archive/",
-    "hgr_log": "./hgr_output_log.yml",
+    "data_directory": "./outputs/data-dlf/",
+    "images_directory": "./outputs/data-gci/",
+    "hgr_archive": "./outputs/sequences/",
+    "hgr_log": "./outputs/history.log",
 
 
     "MAX_HISTORY": 711,

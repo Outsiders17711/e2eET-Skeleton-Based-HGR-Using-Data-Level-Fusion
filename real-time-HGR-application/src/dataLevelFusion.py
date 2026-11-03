@@ -20,7 +20,7 @@ import numpy as np
 from scipy import ndimage
 import matplotlib.colors as mcolors
 
-from _helperFunctions import hgrLogger
+from src.helperFunctions import hgrLogger
 
 
 # [HGR FUNCTIONS]______________________________________________________________
@@ -290,8 +290,9 @@ class loadConfigArguments:
         self.hgr_log = Path(config["hgr_log"])
         self.gs_images_directory = Path(config["images_directory"])
         self.gs_data_directory = Path(config["data_directory"])
-        self.gs_images_directory.mkdir(exist_ok=True)
-        self.gs_data_directory.mkdir(exist_ok=True)
+        self.hgr_log.parent.mkdir(parents=True, exist_ok=True)
+        self.gs_images_directory.mkdir(parents=True, exist_ok=True)
+        self.gs_data_directory.mkdir(parents=True, exist_ok=True)
         for gs_tag in self.gs_data_directory.glob("*"):
             # gs_tag.replace(f"{self.gs_images_directory}/{gs_tag.name}")
             pass

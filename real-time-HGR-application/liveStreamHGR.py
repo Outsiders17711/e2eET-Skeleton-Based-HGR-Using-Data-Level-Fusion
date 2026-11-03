@@ -19,11 +19,16 @@ from pathlib import Path
 import cv2 as cv
 import matplotlib.colors as mc
 import numpy as np
-from _helperFunctions import hgrLogger
-from _mediapipePoseEstimation import HandDetector
+from src.helperFunctions import hgrLogger
+from src.mediapipePoseEstimation import HandDetector
 
 # [GLOBALS]__________________________________________________________
 cfg = json.load(open("./allConfigs.jsonc"))
+
+for _path in (cfg["data_directory"], cfg["images_directory"], cfg["hgr_archive"]):
+    Path(_path).mkdir(parents=True, exist_ok=True)
+Path(cfg["hgr_log"]).parent.mkdir(parents=True, exist_ok=True)
+
 # ---
 gs_deque = deque(maxlen=cfg["MAX_HISTORY"])
 gs_length = cfg["MAX_HISTORY"] - cfg["HISTORY_BUFFER"]
@@ -148,9 +153,9 @@ def live_stream_hgr(nD):
 
 # [>>>>>]____________________________________________________________
 if __name__ == "__main__":
-    gesture_inference = subprocess.Popen(args=[sys.executable, "./gestureClassInference.py"])
-    data_level_fusion = subprocess.Popen(args=[sys.executable, "./dataLevelFusion.py"])
-    vispy_output_gui = subprocess.Popen(args=[sys.executable, "./vispyOutputGUI.py"])
+    gesture_inference = subprocess.Popen(args=[sys.executable, "-m", "src.gestureClassInference"])
+    data_level_fusion = subprocess.Popen(args=[sys.executable, "-m", "src.dataLevelFusion"])
+    vispy_output_gui = subprocess.Popen(args=[sys.executable, "-m", "src.vispyOutputGUI"])
 
     try:
         live_stream_hgr(nD="3d")
