@@ -3,15 +3,17 @@
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------
 import os
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 # ---
 import secrets
 from argparse import ArgumentParser
-from fastai.vision.all import *
-from _modelZoo import *
-from _helperFunctions import *
 
+from _functionsClasses import *
+from _helperFunctions import *
+from _modelZoo import *
+from fastai.vision.all import *
 
 # ---------------------------
 ap = ArgumentParser(description="e2eET Skeleton Based HGR Using Data-Level Fusion")
@@ -65,80 +67,81 @@ e_model_tag = f"../e2eT_checkpoints/[{e_secret}]-{e_tag}-{e_desc}"  # wrt `learn
 Path("../models/e2eT_checkpoints").mkdir(parents=True, exist_ok=True)
 
 
-# [import.functions.classes]
+# [init.functions.classes]
 # ---------------------------
 deets = multiDetailsParser(
     e_desc=e_desc, e_tag=e_tag, e_secret=e_secret, e_model_tag=e_model_tag,
     learn_directory=learn_directory, ds_directory=ds_directory,
     e_repr_seed=None, e_stt_datetime=None, e_strftime=None, e_details=None,
 )
-from _functionsClasses import *
+deets, itr_scl_sizes = initRuntime(args, deets)
 
 
-# [create.dls.model.learn]
-# ---------------------------
-dls = multiOrientationDataLoader(deets.ds_directory, bs=args.bs, img_size=args.init_img_sz, e2eTunerMode=True, preview=True)
+if __name__ == "__main__":
+    # [create.dls.model.learn]
+    # ---------------------------
+    dls = multiOrientationDataLoader(deets.ds_directory, bs=args.bs, img_size=args.init_img_sz, e2eTunerMode=True, preview=True)
 
-model = end2endTunerModel(
-    archMultiVOs=BaseArchitectures[args.mvo_architecture],
-    archTuner=BaseArchitectures[args.tnr_architecture],
-    dls_vocab=dls.vocab,
-    tuner_img_sz=args.init_img_sz,
-)
+    model = end2endTunerModel(
+        archMultiVOs=BaseArchitectures[args.mvo_architecture],
+        archTuner=BaseArchitectures[args.tnr_architecture],
+        dls_vocab=dls.vocab,
+        tuner_img_sz=args.init_img_sz,
+    )
 
-attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
-loss_func = e2eTunerLossWrapper(nOutputs=len(args.mv_orientations)+1)
-metrics = returnMetrics(loss_func, args.mv_orientations, verbose=True)
-learn = Learner(
-    dls, model,
-    metrics=metrics, loss_func=loss_func,
-    opt_func=Adam, splitter=model.splitter,
-    path=deets.learn_directory, model_dir="."
-)
-# generateModelGraph(model, dls, tag=f"e2eT-{ds_name}")
+    attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
+    loss_func = e2eTunerLossWrapper(nOutputs=len(args.mv_orientations)+1)
+    metrics = returnMetrics(loss_func, args.mv_orientations, verbose=True)
+    learn = Learner(
+        dls, model,
+        metrics=metrics, loss_func=loss_func,
+        opt_func=Adam, splitter=model.splitter,
+        path=deets.learn_directory, model_dir="."
+    )
+    # generateModelGraph(model, dls, tag=f"e2eT-{ds_name}")
 
-# [initTraining]
-# ---------------------------
-query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-return_tuple = initTraining(query_tuple, nd=args.nd, bs=args.bs, img_sz=args.init_img_sz, eps=args.init_eps, log=True)
-learn, e_epochs, e_lr, e_accuracy = return_tuple
-
-
-# [init.iterativeScaling]
-# ---------------------------
-if args.init_itr_scl_eps:
-    e_accuracy = 0.0  # reset to track effect of iterative training
-    init_itr_scl_img_sz = itr_scl_sizes.pop(0)
-
+    # [initTraining]
+    # ---------------------------
     query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-    return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=init_itr_scl_img_sz,
-    eps=args.init_itr_scl_eps, finetune=opt_InitItrFinetune[args.nd])
+    return_tuple = initTraining(query_tuple, nd=args.nd, bs=args.bs, img_sz=args.init_img_sz, eps=args.init_eps, log=True)
     learn, e_epochs, e_lr, e_accuracy = return_tuple
-    i_Logger(f"ii{init_itr_scl_img_sz}", e_accuracy)
 
 
-# [iterativeScaling]
-# ---------------------------
-for _img_sz_ in itr_scl_sizes:
-    if _img_sz_:
+    # [init.iterativeScaling]
+    # ---------------------------
+    if args.init_itr_scl_eps:
+        e_accuracy = 0.0  # reset to track effect of iterative training
+        init_itr_scl_img_sz = itr_scl_sizes.pop(0)
+
         query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-        return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=_img_sz_,
-        eps=args.itr_scl_eps, finetune=(True if _img_sz_ == itr_scl_sizes[-1] else args.itr_finetuning))
+        return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=init_itr_scl_img_sz,
+        eps=args.init_itr_scl_eps, finetune=opt_InitItrFinetune[args.nd])
         learn, e_epochs, e_lr, e_accuracy = return_tuple
-        i_Logger(f"{_img_sz_}", e_accuracy)
+        i_Logger(f"ii{init_itr_scl_img_sz}", e_accuracy)
 
 
-# [tunerEvaluation.createCheckpoint(?)]
-# ---------------------------
-learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
-e2eTunerLearnerEvaluation(learn=learn, mVOs=args.mv_orientations, verbose=True)
+    # [iterativeScaling]
+    # ---------------------------
+    for _img_sz_ in itr_scl_sizes:
+        if _img_sz_:
+            query_tuple = (learn, e_epochs, e_lr, e_accuracy)
+            return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=_img_sz_,
+            eps=args.itr_scl_eps, finetune=(True if _img_sz_ == itr_scl_sizes[-1] else args.itr_finetuning))
+            learn, e_epochs, e_lr, e_accuracy = return_tuple
+            i_Logger(f"{_img_sz_}", e_accuracy)
 
-if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
-else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))
+
+    # [tunerEvaluation.createCheckpoint(?)]
+    # ---------------------------
+    learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
+    e2eTunerLearnerEvaluation(learn=learn, mVOs=args.mv_orientations, verbose=True)
+
+    if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
+    else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))
 
 
-# [post.processing]
-# ---------------------------
-Logger(f"e2eT_MaxA: {e_accuracy:.4f} @{i_Timer(stt_time=e_stt_datetime, stdout=False)}")
-print(f"Training completed @{e_tag} ->> [{e_secret}]-{e_strftime} ->- {e_desc}")
-Cleaner(target=learn.path)
+    # [post.processing]
+    # ---------------------------
+    Logger(f"e2eT_MaxA: {e_accuracy:.4f} @{i_Timer(stt_time=deets.e_stt_datetime, stdout=False)}")
+    print(f"Training completed @{e_tag} ->> [{e_secret}]-{deets.e_strftime} ->- {e_desc}")
+    Cleaner(target=learn.path)

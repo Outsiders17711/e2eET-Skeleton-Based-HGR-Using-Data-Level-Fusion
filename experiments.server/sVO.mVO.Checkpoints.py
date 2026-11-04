@@ -3,15 +3,17 @@
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------
 import os
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 # ---
 import secrets
 from argparse import ArgumentParser
-from fastai.vision.all import *
-from _modelZoo import *
-from _helperFunctions import *
 
+from _functionsClasses import *
+from _helperFunctions import *
+from _modelZoo import *
+from fastai.vision.all import *
 
 # ---------------------------
 ap = ArgumentParser(description="e2eET Skeleton Based HGR Using Data-Level Fusion")
@@ -61,74 +63,75 @@ e_model_tag = f"../checkpoints/[{e_secret}]-{e_tag}-{e_desc}"  # wrt `learn.path
 Path("../models/checkpoints").mkdir(parents=True, exist_ok=True)
 
 
-# [import.functions.classes]
+# [init.functions.classes]
 # ---------------------------
 deets = multiDetailsParser(
     e_desc=e_desc, e_tag=e_tag, e_secret=e_secret, e_model_tag=e_model_tag,
     learn_directory=learn_directory, ds_directory=ds_directory,
     e_repr_seed=None, e_stt_datetime=None, e_strftime=None, e_details=None,
 )
-from _functionsClasses import *
+deets, itr_scl_sizes = initRuntime(args, deets)
 
 
-# [create.dls.model.learn]
-# ---------------------------
-dls = multiOrientationDataLoader(ds_directory, bs=args.bs, img_size=args.init_img_sz, preview=True)
+if __name__ == "__main__":
+    # [create.dls.model.learn]
+    # ---------------------------
+    dls = multiOrientationDataLoader(ds_directory, bs=args.bs, img_size=args.init_img_sz, preview=True)
 
-encoder = create_body(BaseArchitectures[args.architecture](pretrained=True), cut=None)
-nf = num_features_model(encoder)
-if args.ftr_fusion == "cat": nf *= len(args.mv_orientations)
-head = create_head(nf=nf, n_out=args.n_classes, lin_ftrs=[512])
-model = multiOrientationModel(encoder, head, nf, debug=False)
+    encoder = create_body(BaseArchitectures[args.architecture](pretrained=True), cut=None)
+    nf = num_features_model(encoder)
+    if args.ftr_fusion == "cat": nf *= len(args.mv_orientations)
+    head = create_head(nf=nf, n_out=args.n_classes, lin_ftrs=[512])
+    model = multiOrientationModel(encoder, head, nf, debug=False)
 
-learn = Learner(
-    dls, model,
-    metrics=accuracy, opt_func=Adam, splitter=model.splitter,
-    path=deets.learn_directory, model_dir="."
-)
-# generateModelGraph(model, dls, tag=ds_name)
+    learn = Learner(
+        dls, model,
+        metrics=accuracy, opt_func=Adam, splitter=model.splitter,
+        path=deets.learn_directory, model_dir="."
+    )
+    # generateModelGraph(model, dls, tag=ds_name)
 
-# [initTraining]
-# ---------------------------
-query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-return_tuple = initTraining(query_tuple, nd=args.nd, bs=args.bs, img_sz=args.init_img_sz, eps=args.init_eps)
-learn, e_epochs, e_lr, e_accuracy = return_tuple
-i_Logger(f"i{args.init_img_sz}", e_accuracy)
-e_accuracy = 0.0  # reset to track effect of iterative training
-
-
-# [init.iterativeScaling]
-# ---------------------------
-if args.init_itr_scl_eps:
-    init_itr_scl_img_sz = itr_scl_sizes.pop(0)
+    # [initTraining]
+    # ---------------------------
     query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-    return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=init_itr_scl_img_sz,
-    eps=args.init_itr_scl_eps, finetune=opt_InitItrFinetune[args.nd])
+    return_tuple = initTraining(query_tuple, nd=args.nd, bs=args.bs, img_sz=args.init_img_sz, eps=args.init_eps)
     learn, e_epochs, e_lr, e_accuracy = return_tuple
-    i_Logger(f"ii{init_itr_scl_img_sz}", e_accuracy)
+    i_Logger(f"i{args.init_img_sz}", e_accuracy)
+    e_accuracy = 0.0  # reset to track effect of iterative training
 
 
-# [iterativeScaling]
-# ---------------------------
-for _img_sz_ in itr_scl_sizes:
-    if _img_sz_:
+    # [init.iterativeScaling]
+    # ---------------------------
+    if args.init_itr_scl_eps:
+        init_itr_scl_img_sz = itr_scl_sizes.pop(0)
         query_tuple = (learn, e_epochs, e_lr, e_accuracy)
-        return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=_img_sz_,
-        eps=args.itr_scl_eps, finetune=(True if _img_sz_ == itr_scl_sizes[-1] else args.itr_finetuning))
+        return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=init_itr_scl_img_sz,
+        eps=args.init_itr_scl_eps, finetune=opt_InitItrFinetune[args.nd])
         learn, e_epochs, e_lr, e_accuracy = return_tuple
-        i_Logger(f"{_img_sz_}", e_accuracy)
+        i_Logger(f"ii{init_itr_scl_img_sz}", e_accuracy)
 
 
-# [createCheckpoint(?)]
-# ---------------------------
-learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
+    # [iterativeScaling]
+    # ---------------------------
+    for _img_sz_ in itr_scl_sizes:
+        if _img_sz_:
+            query_tuple = (learn, e_epochs, e_lr, e_accuracy)
+            return_tuple = iterativeScaling(query_tuple, nd=args.nd, bs=args.bs, img_sz=_img_sz_,
+            eps=args.itr_scl_eps, finetune=(True if _img_sz_ == itr_scl_sizes[-1] else args.itr_finetuning))
+            learn, e_epochs, e_lr, e_accuracy = return_tuple
+            i_Logger(f"{_img_sz_}", e_accuracy)
 
-if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
-else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))
+
+    # [createCheckpoint(?)]
+    # ---------------------------
+    learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
+
+    if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
+    else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))
 
 
-# [post.processing]
-# ---------------------------
-Logger(f"MaxA: {e_accuracy:.4f} @{i_Timer(stt_time=e_stt_datetime, stdout=False)}")
-print(f"Training completed @{e_tag} ->> [{e_secret}]-{e_strftime} ->- {e_desc}")
-Cleaner(target=learn.path)
+    # [post.processing]
+    # ---------------------------
+    Logger(f"MaxA: {e_accuracy:.4f} @{i_Timer(stt_time=deets.e_stt_datetime, stdout=False)}")
+    print(f"Training completed @{e_tag} ->> [{e_secret}]-{deets.e_strftime} ->- {e_desc}")
+    Cleaner(target=learn.path)

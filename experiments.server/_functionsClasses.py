@@ -4,6 +4,7 @@
 # pyright: reportWildcardImportFromLibrary=false
 # -----------------------------------------------
 import os
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 if os.name == "nt": os.EX_OK = 0
@@ -11,22 +12,24 @@ if os.name == "nt": os.EX_OK = 0
 import random
 import shutil
 import traceback
-from textwrap import dedent
 from datetime import datetime
+from textwrap import dedent
+
+import numpy as np
+
 # ---
 import torch
 import torch.nn as NN
-import numpy as np
-from fastai.vision.all import *
-from fastai.torch_core import defaults
-from torch.utils.tensorboard.writer import SummaryWriter
-from IPython.display import clear_output
-# ---
-from __main__ import args, deets
-from _helperFunctions import *
 
+# ---
+from _helperFunctions import *
+from fastai.torch_core import defaults
+from fastai.vision.all import *
+from IPython.display import clear_output
+from torch.utils.tensorboard.writer import SummaryWriter
 
 __all__ = [
+    "initRuntime",
     "multiOrientationDataLoader",
     "multiOrientationModel",
     "modelCheckpoint",
@@ -55,15 +58,36 @@ __all__ = [
 # -----------------------------------------------
 
 
-e_repr_seed = 17711
-e_stt_datetime = datetime.now()
-e_strftime = e_stt_datetime.strftime("%d%m%y.%H%M")
-if not(hasattr(args, "e_history")): setattr(args, "e_history", [])
-e_args = "\n".join([f"\t{_arg.ljust(25)} -- {str(type(getattr(args, _arg))).ljust(15)} -- {getattr(args, _arg)}" for _arg in vars(args)])
+# entrypoints call initRuntime(args, deets) before using this module
+args = None
+deets = None
+e_stt_datetime = None
+e_strftime = None
+itr_scl_sizes = None
 
-e_details = f"{deets.e_tag=}\n{deets.e_secret=}\n{e_strftime=}\n{deets.e_desc=}\n{deets.ds_directory=}\ne_args=\n{e_args}"
-deets = deets._replace(e_repr_seed=e_repr_seed, e_stt_datetime=e_stt_datetime, e_strftime=e_strftime, e_details=e_details)
-if args.verbose: print(e_details, end=f"\n{'-'*15}\n") ; os._exit(os.EX_OK)
+
+def initRuntime(_args, _deets):
+    global args, deets, e_stt_datetime, e_strftime, itr_scl_sizes
+    global e_repr_gen, e_seed_worker
+
+    args, deets = _args, _deets
+    e_repr_seed = 17711
+
+    e_stt_datetime = datetime.now()
+    e_strftime = e_stt_datetime.strftime("%d%m%y.%H%M")
+    if not(hasattr(args, "e_history")): setattr(args, "e_history", [])
+    e_args = "\n".join([f"\t{_arg.ljust(25)} -- {str(type(getattr(args, _arg))).ljust(15)} -- {getattr(args, _arg)}" for _arg in vars(args)])
+
+    e_details = f"{deets.e_tag=}\n{deets.e_secret=}\n{e_strftime=}\n{deets.e_desc=}\n{deets.ds_directory=}\ne_args=\n{e_args}"
+    deets = deets._replace(e_repr_seed=e_repr_seed, e_stt_datetime=e_stt_datetime, e_strftime=e_strftime, e_details=e_details)
+    if args.verbose: print(e_details, end=f"\n{'-'*15}\n") ; os._exit(os.EX_OK)
+
+    itr_scl_sizes = opt_ItrScalingSizes[args.nd] if args.itr_scl_sizes == ["<OPT>"] else args.itr_scl_sizes
+
+    e_repr_gen, e_seed_worker = set_reproducibility(seed=deets.e_repr_seed)
+    no_random(seed=deets.e_repr_seed, reproducible=True)
+
+    return deets, itr_scl_sizes
 # -----------------------------------------------
 
 
@@ -75,7 +99,6 @@ opt_pctStart = {
 opt_InitEpochs = {"2d": 20, "3d": 20}
 opt_InitItrFinetune = {"2d": True, "3d": False}
 opt_ItrScalingSizes = {"2d": [224, 224, 276, 328], "3d": [276, 328, 380]}
-itr_scl_sizes = opt_ItrScalingSizes[args.nd] if args.itr_scl_sizes == ["<OPT>"] else args.itr_scl_sizes
 
 # -----------------------------------------------
 
@@ -99,9 +122,6 @@ def set_reproducibility(seed):
         np.random.seed(worker_seed)
 
     return g, e_seed_worker
-
-e_repr_gen, e_seed_worker = set_reproducibility(seed=deets.e_repr_seed)
-no_random(seed=deets.e_repr_seed, reproducible=True)
 # -----------------------------------------------
 
 

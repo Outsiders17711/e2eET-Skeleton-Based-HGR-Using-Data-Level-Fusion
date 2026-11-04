@@ -5,13 +5,15 @@
 # ---------------------------------------------------------
 
 import json
+from datetime import datetime, timedelta
+from pathlib import Path
+
 import cv2 as cv
 import numpy as np
-from pathlib import Path
 from fastai.vision.all import *
-from datetime import datetime, timedelta
 
-from src.helperFunctions import multiDetailsParser, hgrLogger
+from src.functionsClasses import attachMetrics, e2eTunerLossWrapper, initRuntime
+from src.helperFunctions import hgrLogger, multiDetailsParser
 
 
 # [init.args.deets.defaults]
@@ -46,17 +48,23 @@ Path(args.images_directory).mkdir(parents=True, exist_ok=True)
 
 # [init.learner.object]
 # ---------------------------
-from src.functionsClasses import attachMetrics, e2eTunerLossWrapper
+# dataloader workers re-import this module, so the runtime context must be set here
+initRuntime(args, deets)
+learn = None
 
-pkl_file = Path("./models/[bf75]-7G-[cm_td_fa].pkl")
-if not pkl_file.is_file():
-    raise FileNotFoundError(f"required saved model not found: {pkl_file}")
 
-attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
-learn = load_learner(fname=str(pkl_file), cpu=args.cpu_mode)
-learn.dls.device = defaults.device
-str_dls_vocab = " ".join([f"{i}.{v}" for i, v in enumerate(learn.dls.vocab)])
-print(f"INFO: dls.vocab=[{str_dls_vocab}]")
+def initLearner():
+    global learn
+
+    pkl_file = Path("./models/[bf75]-7G-[cm_td_fa].pkl")
+    if not pkl_file.is_file():
+        raise FileNotFoundError(f"required saved model not found: {pkl_file}")
+
+    attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
+    learn = load_learner(fname=str(pkl_file), cpu=args.cpu_mode)
+    learn.dls.device = defaults.device
+    str_dls_vocab = " ".join([f"{i}.{v}" for i, v in enumerate(learn.dls.vocab)])
+    print(f"INFO: dls.vocab=[{str_dls_vocab}]")
 
 
 # [display.inferences]
@@ -133,6 +141,7 @@ def main():
 
 # [>>>>>]____________________________________________________________
 if __name__ == "__main__":
+    initLearner()
     _archive()
     print("INFO: Initialized <gestureClassInference.py> ...")
 
