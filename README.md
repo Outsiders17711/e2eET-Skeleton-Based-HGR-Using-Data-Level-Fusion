@@ -221,6 +221,18 @@ When `debug_mode` is enabled in `./real-time-HGR-application/allConfigs.jsonc`, 
   <img src="./images/live-hgr-application-flowchart.png" alt="live-hgr-application-flowchart">
 </p>
 
+### Demo Dataset & Model Training
+
+The optional seven-class demo dataset is generated from the 14G DHG1428 spatiotemporal dataset. Extract `DHG1428.mVOs-3d.14g-noisy(raw).960px-[allVOs].adaptive-mean.rar` into `./images_d`, then run:
+
+```bash
+cd real-time-HGR-application
+uv run python -m src.createDemoDataset
+uv run python -m src.ensembleTunerTraining -IG 0 --n_classes 7 -IE 30 -IISE 0 -ISE 10 -ISIS 276 328 -CEMC -CETE
+```
+
+`createDemoDataset` writes `./images_d/DHG1428.liveStream-3D.7G-[custom.topdown.frontaway]`. Training writes the model and checkpoints to `./models` and appends results to `./ensembleTunerTraining.yml`. The notebook `./ensembleTunerTraining.ipynb` contains the same commands.
+
 <hr>
 
 

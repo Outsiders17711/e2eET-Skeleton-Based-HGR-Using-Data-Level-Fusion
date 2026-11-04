@@ -9,14 +9,16 @@
 # https://drive.google.com/drive/folders/1BvoxkRDBK86A3_oNdQrnC8TLvp4l0W9x
 datasets/*.pckl
 images_d/*.rar
+images_d/*/
 ieee-icma-2023-conference/*.mp4
-real-time-HGR-application/models/*.pkl
+**/models/*.pkl
 
 # local archives and temporary files
 **/*tmp*
 **/*bak*
 archive*/
 real-time-HGR-application/outputs/
+**/models/*.pth
 
 sync.ffs_db
 ruff.toml
