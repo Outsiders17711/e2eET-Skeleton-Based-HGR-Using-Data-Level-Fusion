@@ -19,6 +19,8 @@ dependencies = [
     "matplotlib==3.10.9",
     "vispy==0.17.0",
     "PyQt5==5.15.11",
+    # tensorboard 2.19 imports pkg_resources, which setuptools >=82 no longer ships.
+    "setuptools<82",
     "tensorboard==2.19.0",
     "ipython==8.30.0",
     "scikit-learn==1.9.1",
