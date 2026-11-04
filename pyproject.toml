@@ -39,8 +39,8 @@ select = ["F", "I"]
 ignore = ["F401", "F403", "F405"]
 
 [tool.pyright]
-include = ["real-time-HGR-application", "experiments.server", "modules"]
-exclude = ["**/__pycache__", "archive", "archive031126"]
+include = ["gesture-recognition", "experiments", "data-pipeline"]
+exclude = ["**/__pycache__", "archive"]
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
