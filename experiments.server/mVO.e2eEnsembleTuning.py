@@ -130,7 +130,7 @@ for _img_sz_ in itr_scl_sizes:
 
 # [tunerEvaluation.createCheckpoint(?)]
 # ---------------------------
-learn.load(deets.e_model_tag, with_opt=True)  # ensure that best model is loaded
+learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
 e2eTunerLearnerEvaluation(learn=learn, mVOs=args.mv_orientations, verbose=True)
 
 if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)

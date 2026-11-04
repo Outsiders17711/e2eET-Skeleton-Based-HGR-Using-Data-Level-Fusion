@@ -308,7 +308,7 @@ class outsidersCustomCallback(TrackerCallback):
             self.writer.add_scalar(f"{_tm}", self.recorder.values[-1][_idx], self.e_epochs)
         
     def after_fit(self, **kwargs):
-        self.load(self._tmp_model_tag, with_opt=True)
+        self.load(self._tmp_model_tag, with_opt=True, weights_only=False)
         if args.create_e_tb_events: self.writer.close()
         if self.verbose: print(f"@cbs {self= }")
         print(f"@outsidersCustomCallback: Training completed and best {self.i_tag} model loaded!")
@@ -430,8 +430,8 @@ def modelCheckpoint(learn, learn_directory):
     _stem = f"[{deets.e_secret}]-{args.n_classes}G-{translateMVOs(args.mv_orientations)}"
     _path_mask = f"../checkpoints/{_stem}"
     
-    learn = learn.load(file=deets.e_model_tag, with_opt=True)
-    learn.export(fname=f"{_path_mask}.pkl")
+    learn = learn.load(file=deets.e_model_tag, with_opt=True, weights_only=False)
+    learn.export(fname=f"{_path_mask}.pkl", pickle_module=portablePickle)
     print(f"Learner pkl and pt checkpoints created successfully")
 # -----------------------------------------------
 

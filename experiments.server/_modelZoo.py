@@ -17,6 +17,18 @@ cache = "~/.cache/torch/hub/pytorchcv"
 gen_params = {"drop_connect_rate": 0.2, "as_sequential": True}
 
 # ---
+def resnet18(pretrained=True):
+    return models.resnet18(weights="IMAGENET1K_V1" if pretrained else None)
+def resnet34(pretrained=True):
+    return models.resnet34(weights="IMAGENET1K_V1" if pretrained else None)
+def resnet50(pretrained=True):
+    return models.resnet50(weights="IMAGENET1K_V1" if pretrained else None)
+def resnet101(pretrained=True):
+    return models.resnet101(weights="IMAGENET1K_V1" if pretrained else None)
+def resnet152(pretrained=True):
+    return models.resnet152(weights="IMAGENET1K_V1" if pretrained else None)
+
+# ---
 def inception_v3(pretrained=True): 
     return pcvm.inceptionv3(pretrained=pretrained, root=cache).features
 def inception_v4(pretrained=True): 
@@ -65,11 +77,11 @@ def efficientnet_b7(pretrained=True):
 # ---
 BaseArchitectures = {
     # --- ResNet
-    "resnet18":  models.resnet18,
-    "resnet34":  models.resnet34,
-    "resnet50":  models.resnet50,
-    "resnet101": models.resnet101,
-    "resnet152": models.resnet152,
+    "resnet18":  resnet18,
+    "resnet34":  resnet34,
+    "resnet50":  resnet50,
+    "resnet101": resnet101,
+    "resnet152": resnet152,
     # --- XResNet
     "xresnet50":        models.xresnet.xresnet50,
     "xresnet50_deep":   models.xresnet.xresnet50_deep,

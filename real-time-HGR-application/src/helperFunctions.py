@@ -2,16 +2,48 @@
 # pyright: reportGeneralTypeIssues=false
 # pyright: reportOptionalMemberAccess=false
 # pyright: reportWildcardImportFromLibrary=false
+# pyright: reportAttributeAccessIssue=false
 # -----------------------------------------------
+import pickle
 import re
+import types
 from collections import namedtuple
+from pathlib import Path
 
 
 __all__ = [
     "e_desc_mVOs",
     "translateMVOs",
     "multiDetailsParser",
+    "portablePickle",
 ]
+# -----------------------------------------------
+
+
+class PortablePickler(pickle._Pickler):
+    # fastai pickles Path objects as PosixPath/WindowsPath; save them as Path.
+    def reducer_override(self, obj):
+        if isinstance(obj, Path):
+            return Path, (str(obj),)
+        return NotImplemented
+
+    def save(self, obj, save_persistent_id=True):
+        if isinstance(obj, type) and issubclass(obj, Path):
+            if id(Path) in self.memo:
+                self.write(self.get(self.memo[id(Path)][0]))
+            else:
+                self.save_global(Path, "Path")
+            return
+        super().save(obj, save_persistent_id)
+
+
+portablePickle = types.SimpleNamespace(
+    __name__="portablePickle",
+    Pickler=PortablePickler,
+    Unpickler=pickle.Unpickler,
+    dump=pickle.dump,
+    load=pickle.load,
+)
 # -----------------------------------------------
 
 

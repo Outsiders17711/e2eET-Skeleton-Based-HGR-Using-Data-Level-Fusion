@@ -297,7 +297,7 @@ class outsidersCustomCallback(TrackerCallback):
             self.writer.add_scalar(f"{_tm}", self.recorder.values[-1][_idx], self.e_epochs)
 
     def after_fit(self, **kwargs):
-        self.load(self._tmp_model_tag, with_opt=True)
+        self.load(self._tmp_model_tag, with_opt=True, weights_only=False)
         if args.create_e_tb_events: self.writer.close()
         if self.verbose: print(f"@cbs {self= }")
         print(f"@outsidersCustomCallback: Training completed and best {self.i_tag} model loaded!")
@@ -350,8 +350,8 @@ def modelCheckpoint(learn, learn_directory):
     _stem = f"[{deets.e_secret}]-{args.n_classes}G-{translateMVOs(args.mv_orientations)}"
     _path_mask = f"../{_stem}"
 
-    learn = learn.load(file=deets.e_model_tag, with_opt=True)
-    learn.export(fname=f"{_path_mask}.pkl")
+    learn = learn.load(file=deets.e_model_tag, with_opt=True, weights_only=False)
+    learn.export(fname=f"{_path_mask}.pkl", pickle_module=portablePickle)
     print(f"Learner pkl and pt checkpoints created successfully")
 # -----------------------------------------------
 
@@ -443,9 +443,9 @@ class end2endTunerModel(Module):
         self.tuner_img_sz = tuner_img_sz
         self.debug = debug
 
-        self.multiVOsBody = create_body(archMultiVOs(pretrained=True), cut=None)
+        self.multiVOsBody = create_body(archMultiVOs(weights="IMAGENET1K_V1"), cut=None)
         self.multiVOsHead = create_head(nf=num_features_model(self.multiVOsBody), n_out=args.n_classes)
-        self.tunerBody = create_body(archTuner(pretrained=True), cut=None)
+        self.tunerBody = create_body(archTuner(weights="IMAGENET1K_V1"), cut=None)
         self.tunerHead = create_head(nf=num_features_model(self.tunerBody), n_out=args.n_classes)
 
         self.item_tfms = [Resize(size=tuner_img_sz, method=ResizeMethod.Squish), ToTensor()]

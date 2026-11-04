@@ -121,7 +121,7 @@ for _img_sz_ in itr_scl_sizes:
 
 # [createCheckpoint(?)]
 # ---------------------------
-learn.load(deets.e_model_tag, with_opt=True)  # ensure that best model is loaded
+learn.load(deets.e_model_tag, with_opt=True, weights_only=False)  # ensure that best model is loaded
 
 if args.create_e_model_checkpoint: modelCheckpoint(learn, learn_directory)
 else: os.remove(Path(f"{learn.path}/{learn.model_dir}/{deets.e_model_tag}.pth"))

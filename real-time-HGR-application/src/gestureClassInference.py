@@ -4,12 +4,10 @@
 # pyright: reportWildcardImportFromLibrary=false
 # ---------------------------------------------------------
 
-import os
-import sys
 import json
-import pathlib
 import cv2 as cv
 import numpy as np
+from pathlib import Path
 from fastai.vision.all import *
 from datetime import datetime, timedelta
 
@@ -48,21 +46,14 @@ Path(args.images_directory).mkdir(parents=True, exist_ok=True)
 
 # [init.learner.object]
 # ---------------------------
-import src.functionsClasses as functions_classes
 from src.functionsClasses import attachMetrics, e2eTunerLossWrapper
 
-# the exported learner still references the original module name
-sys.modules["_functionsClasses"] = functions_classes
-
-if os.name == 'nt':  # For Windows OS
-    pathlib.PosixPath = pathlib.WindowsPath
-    pkl_file = "./models/[bf75]-7G-[cm_td_fa]-Windows.pkl"
-else:  # For Linux OS
-    pathlib.WindowsPath = pathlib.PosixPath
-    pkl_file = "./models/[bf75]-7G-[cm_td_fa]-Linux.pkl"
+pkl_file = Path("./models/[bf75]-7G-[cm_td_fa].pkl")
+if not pkl_file.is_file():
+    raise FileNotFoundError(f"required saved model not found: {pkl_file}")
 
 attachMetrics(e2eTunerLossWrapper, args.mv_orientations, rename=True)
-learn = load_learner(fname=pkl_file, cpu=args.cpu_mode)
+learn = load_learner(fname=str(pkl_file), cpu=args.cpu_mode)
 learn.dls.device = defaults.device
 str_dls_vocab = " ".join([f"{i}.{v}" for i, v in enumerate(learn.dls.vocab)])
 print(f"INFO: dls.vocab=[{str_dls_vocab}]")
@@ -115,7 +106,8 @@ def main():
         ) if args.debug_mode else None
         args.idle = False
 
-        data_dl = learn.dls.test_dl(data_files)
+        # use single-process for inference to avoid multiprocessing issues on windows
+        data_dl = learn.dls.test_dl(data_files, num_workers=0)
         preds, targs, decoded = learn.get_preds(dl=data_dl, with_decoded=True)
         decoded = np.array([i.numpy() for i in decoded]).tolist()
         aggregate = np.array([i.numpy() for i in preds]).sum(axis=0).argmax(axis=1).tolist()
