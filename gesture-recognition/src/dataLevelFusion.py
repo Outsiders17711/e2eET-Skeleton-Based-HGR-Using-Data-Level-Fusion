@@ -311,9 +311,13 @@ class loadConfigArguments:
             return f"{delimiter}".join(self.v_orientation).replace("-", "")
 
     # ---
-    def init_gesture_sequence(self, gs_tag=Path("./")):
-        self.gs_tag = gs_tag
-        self.gs_data = np.load(f"{gs_tag}/gs_sequence.npy", allow_pickle=True)
+    def init_gesture_sequence(self, gs_tag=None):
+        if gs_tag is None:  # initialise fallback sequence
+            self.gs_tag = Path(".")
+            self.gs_data = np.ones((25, 21, 3))
+        else:
+            self.gs_tag = gs_tag
+            self.gs_data = np.load(f"{gs_tag}/gs_sequence.npy", allow_pickle=True)
 
         # --- **tweak here** ---
         # self.gs_data = np.abs(self.gs_data)

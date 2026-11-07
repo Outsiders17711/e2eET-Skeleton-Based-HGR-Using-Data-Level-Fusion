@@ -28,7 +28,7 @@ canvas = scene.SceneCanvas(
 
 view = canvas.central_widget.add_view()
 view.camera = "panzoom"
-view.camera.center, view.camera.zoom, view.camera.pan = (0.0, 0.0), 1.0, (0.0, 0.0)
+view.camera.interactive = False
 
 output = scene.Text(
     text="",
@@ -85,8 +85,7 @@ def get_camera_details():
         f"\n  {canvas.size=}",
         f"| {canvas.position=}",
         f"\n  {view.camera.center=}",
-        f"| {view.camera.zoom=}",
-        f"| {view.camera.pan=}",
+        f"| {view.camera.rect=}",
     )
 
 
